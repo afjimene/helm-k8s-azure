@@ -1,0 +1,108 @@
+@startuml kubernetes
+
+footer Backbase Local Kubernetes Plant-UML
+scale max 1024 width
+
+skinparam nodesep 10
+skinparam ranksep 10
+
+' Azure
+!define AzurePuml https://raw.githubusercontent.com/RicardoNiepel/Azure-PlantUML/release/2-1/dist
+
+!includeurl AzurePuml/AzureCommon.puml
+!includeurl AzurePuml/AzureSimplified.puml
+
+!includeurl AzurePuml/Containers/AzureContainerRegistry.puml
+
+' Kubernetes
+!define KubernetesPuml https://raw.githubusercontent.com/dcasati/kubernetes-PlantUML/master/dist
+
+!includeurl KubernetesPuml/kubernetes_Context.puml
+!includeurl KubernetesPuml/kubernetes_Simplified.puml
+
+!includeurl KubernetesPuml/OSS/KubernetesApi.puml
+!includeurl KubernetesPuml/OSS/KubernetesIng.puml
+!includeurl KubernetesPuml/OSS/KubernetesPod.puml
+!includeurl KubernetesPuml/OSS/KubernetesJob.puml
+!includeurl KubernetesPuml/OSS/KubernetesSecret.puml
+!includeurl KubernetesPuml/OSS/KubernetesSvc.puml
+
+actor "DevOps" as devopsAlias
+actor "User" as userAlias
+'collections "Client Apps" as clientalias
+collections "Backbase \nHelm Charts" as helmalias
+
+left to right direction
+
+' Azure Components
+AzureContainerRegistry(acr, "Backbase \nDocker Registry", "Canada Central")
+'AzureLoadBalancer(alb, "\nLoad\nBalancer", "Canada Central")
+'AzureSqlDatabase(sql, "\nExternal\ndata stores", "Canada Central")
+'AzurePipelines(ado, "CI/CD\nBackbase Pipelines", "Global")
+
+' Kubernetes Components
+Cluster_Boundary(cluster, "Kubernetes Cluster") {
+    KubernetesApi(KubernetesApi, "Kubernetes API", "")
+    
+    Namespace_Boundary(nsFrontEnd, "Namespace") {
+        KubernetesIng(ingress, "API Gateway", "")
+
+        KubernetesPod(KubernetesBE1, "Portal", "")
+        KubernetesPod(KubernetesBE2, "CS", "")
+        KubernetesPod(KubernetesBE3, "Provisioning", "")
+        KubernetesPod(KubernetesBE4, "Auth", "")
+        KubernetesPod(KubernetesUtil1, "Eureka", "")
+        KubernetesPod(KubernetesUtil2, "Edge", "")
+        KubernetesPod(KubernetesUtil3, "ActiveMQ", "")
+        KubernetesPod(KubernetesUtil4, "MySQL", "")
+        KubernetesJob(staticsJob, "statics", "")
+        KubernetesSecret(KubernetesSecretAMQ, "activemq", "")
+        KubernetesSecret(KubernetesSecretDB, "mysql", "")
+        KubernetesSecret(KubernetesSecretJWT, "jwt", "")
+
+        KubernetesSvc(svcAMQ, "ActiveMQ \nClusterIP \nservice", "")
+        KubernetesSvc(svcEureka, "Eureka \nClusterIP \nservice", "")
+        KubernetesSvc(svcEdge, "Edge \nClusterIP \nservice", "")
+        KubernetesSvc(svcDB, "MySQL \nClusterIP \nservice", "")
+    }
+}
+
+
+
+Rel(userAlias, ingress, "HTTP", "get HTTP/1.1 kubernetes.docker.internal/api/cxp-manager")
+'Rel(clientalias, ingress, "HTTP", "")
+
+Rel(ingress, svcEdge, " ")
+Rel(svcEdge, KubernetesUtil2, " ")
+Rel(svcEdge, svcEureka, " ")
+Rel(svcEureka, KubernetesUtil1, " ")
+Rel(KubernetesUtil2, KubernetesBE1, " ")
+Rel(KubernetesUtil2, KubernetesBE2, " ")
+Rel(KubernetesUtil2, KubernetesBE3, " ")
+Rel(KubernetesUtil2, KubernetesBE4, " ")
+Rel(staticsJob, svcEdge, " ")
+
+Rel(KubernetesBE1, svcDB, " ")
+Rel(KubernetesBE2, svcDB, " ")
+Rel(KubernetesBE3, svcDB, " ")
+Rel(svcDB, KubernetesUtil4, " ")
+
+Rel(KubernetesBE1, svcAMQ, " ")
+Rel(KubernetesBE2, svcAMQ, " ")
+Rel(KubernetesBE3, svcAMQ, " ")
+Rel(svcAMQ, KubernetesUtil3, " ")
+
+Rel(KubernetesBE4, KubernetesSecretJWT, " ")
+Rel(KubernetesUtil3, KubernetesSecretAMQ, " ")
+Rel(KubernetesUtil4, KubernetesSecretDB, " ")
+
+'Rel(KubernetesBE2, sql, " ")
+
+'Rel(ado, acr, "docker push")
+Rel(KubernetesApi, acr, "docker pull")
+Rel(devopsAlias, helmalias, "helm install")
+Rel(helmalias, KubernetesApi, " ")
+
+Rel(ingress, userAlias, "return content to", "4")
+
+@enduml
