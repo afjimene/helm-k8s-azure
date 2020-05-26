@@ -238,8 +238,8 @@ backbase-statics:
         apikey: 
         ## Username and password in case you don't want to use an API KEY to access JFrog Artifactory
         ## IMPORTANT! only 1 authentication method is required
-        username: trainingbe2020wk21
-        password: b[tbPheHfWF9
+        username: trainingbe2020wk22
+        password: tQ<nBpD$bmDF
         statics:
         - /backbase-6-release/com/backbase/tools/cx/cx6-import-tool-cli/6.2.2/cx6-import-tool-cli-6.2.2.jar
         - /backbase-6-release/com/backbase/cxp/editorial-collection/b3554/editorial-collection-b3554.zip
