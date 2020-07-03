@@ -1,22 +1,19 @@
 dependencies:
   - name: backbase-env
     repository: https://repo.backbase.com/backbase-charts
-    version: 0.4.9
+    version: 0.5.5
   - name: ips-edge
     repository: https://repo.backbase.com/backbase-charts
-    version: 0.5.0
-  - name: ips-registry
-    repository: https://repo.backbase.com/backbase-charts
-    version: 0.5.0
+    version: 0.7.0
   - name: ips-bas-token-converter
     repository: https://repo.backbase.com/backbase-charts
-    version: 0.5.0
-  - name: ips-authentication-ldap
+    version: 0.6.0
+  - name: ips-authentication-dev
     repository: https://repo.backbase.com/backbase-charts
-    version: 0.5.0
+    version: 0.6.0
   - name: cxs
     repository: https://repo.backbase.com/backbase-charts
-    version: 0.3.1
+    version: 0.4.1
   - name: backbase-statics
     repository: https://repo.backbase.com/backbase-charts
-    version: 0.1.4
+    version: 0.1.5

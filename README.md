@@ -40,6 +40,8 @@ kubectl create secret docker-registry regcred --docker-server=https://repo.backb
 kubectl patch serviceaccount default -p "{\"imagePullSecrets\": [{\"name\": \"regcred\"}]}" -n default
 ```
 
+Change `<yourRepoUsername>` and `<yourRepoPassword>` with your Repo credentials in values.yaml
+
 ## Install
 ```
 helm repo add bb-github https://backbase.github.io/helm-k8s-local/
@@ -59,3 +61,4 @@ All configuration is provided in values.yaml
 ## Changelog
 
 - 0.0.1: Initial release
+- 0.1.0: Update Edge 2 and Registry removed

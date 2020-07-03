@@ -1,4 +1,14 @@
 global:
+  env:
+    "EUREKA_CLIENT_ENABLED": "false"
+    "SPRING_CLOUD_KUBERNETES_ENABLED": "true"
+    "SPRING_CLOUD_KUBERNETES_RELOAD_ENABLED": "true"
+    "SPRING_CLOUD_KUBERNETES_RIBBON_MODE": "SERVICE"
+    "spring.cloud.loadbalancer.ribbon.enabled": "false"
+    "spring.autoconfigure.exclude": "org.springframework.cloud.netflix.eureka.loadbalancer.LoadBalancerEurekaAutoConfiguration"
+    # Enabling RBAC roles creation as it's disabled by default
+  rbac:
+    create: true
   app:
     image:
       registry: repo.backbase.com/backbase-docker-releases
@@ -13,7 +23,7 @@ global:
   jwt:
     existingSecret: local-k8s-jwt
   registry:
-    host: registry
+    enabled: false
 
 backbase-env:
   fullnameOverride: local-k8s
@@ -32,25 +42,16 @@ backbase-env:
     externalEncSecretKey: "JWTEncKeyDontUseInProduction666!"
     userctxKey: "JWTSecretKeyDontUseInProduction!"
 
-
-ips-registry:
-  registry:
-    app:
-      name: registry
-      image:
-        repository: registry
-        tag: IPS-1.11.8-latest
-    service:
-      enabled: true
-      nameOverride: registry
-
 ips-edge:
   edge:
+    env:
+      GATEWAY_ACTUATOR_USER: "admin"
+      GATEWAY_ACTUATOR_PASSWORD: "admin"
     app:
       name: edge
       image:
-        repository: gateway
-        tag: IPS-1.11.8-latest
+        repository: edge
+        tag: IPS-1.12.0
     service:
       enabled: true
       nameOverride: edge
@@ -65,19 +66,27 @@ ips-edge:
           paths:
             - /
 
-ips-authentication-ldap:
-  authentication-ldap:
+ips-authentication-dev:
+  authentication-dev:
     app:
       image:
         repository: authentication-dev
-        tag: IPS-1.11.8-latest-no-production
+        tag: IPS-1.12.0-no-production
+    service:
+      enabled: true
+      nameOverride: auth
 
 ips-bas-token-converter:
   bas-token-converter:
+    env:
+      "SPRING_AUTOCONFIGURE_EXCLUDE": "org.springframework.cloud.function.context.config.ContextFunctionCatalogAutoConfiguration"
     app:
       image:
         repository: bb-authentication-token-converter-service
-        tag: IPS-1.11.8-latest
+        tag: IPS-1.12.0
+    service:
+      enabled: true
+      nameOverride: token-converter
 
 cxs:
   auditing:
@@ -88,6 +97,9 @@ cxs:
         repository: auditing
     database:
       sid: cx6_audit
+    service:
+      enabled: true
+      nameOverride: auditing
 
   contentservices:
     enabled: true
@@ -95,7 +107,7 @@ cxs:
       name: contentservices
       image:
         repository: contentservices
-        tag: CXS-6.2.3.1-latest
+        tag: CXS-6.2.5
       resources:
         memory:
           ram: 1024
@@ -104,6 +116,9 @@ cxs:
           maxShares: 2000
     database:
       sid: cx6_contentservices
+    service:
+      enabled: true
+      nameOverride: contentservices
 
   portal:
     enabled: true
@@ -112,7 +127,7 @@ cxs:
       image:
         # Provide here correct Docker image (portal-exec-jar)
         repository: portal
-        tag: CXS-6.2.3.1-latest
+        tag: CXS-6.2.5
       resources:
         memory:
           ram: 1024
@@ -121,6 +136,9 @@ cxs:
           maxShares: 2000
     database:
       sid: cx6_portal
+    service:
+      enabled: true
+      nameOverride: portal
     env:
       PORTAL_RESOURCELOCATION_PROFILE: "filesystem"
       PORTAL_RESOURCELOCATION_PATH: "/tmp"
@@ -140,7 +158,7 @@ cxs:
       name: provisioning
       image:
         repository: provisioning
-        tag: CXS-6.2.3.1-latest
+        tag: CXS-6.2.5
       resources:
         memory:
           ram: 1024
@@ -149,6 +167,9 @@ cxs:
           maxShares: 2000
     database:
       sid: cx6_provisioning
+    service:
+      enabled: true
+      nameOverride: provisioning
 
   pushintegrationservice:
     enabled: false
@@ -156,29 +177,35 @@ cxs:
       name: pushintegrationservice
       image:
         repository: push-integration-service
-        tag: CXS-6.2.3.1-latest
+        tag: CXS-6.2.5
     database:
       sid: cx6_push_integration
     env:
       "eureka.instance.non-secure-port": "8080"
+    service:
+      enabled: true
+      nameOverride: pushintegrationservice
   renditionservice:
     enabled: false
     app:
       name: renditionservice
       image:
         repository: renditionservice
-        tag: CXS-6.2.3.1-latest
+        tag: CXS-6.2.5
     database:
       sid: cx6_renditionservice
     env:
       "renditionservice.extension-points.enabled": "true"
+    service:
+      enabled: true
+      nameOverride: renditionservice
   targeting:
     enabled: false
     app:
       name: targeting
       image:
         repository: targeting
-        tag: CXS-6.2.3.1-latest
+        tag: CXS-6.2.5
       resources:
         memory:
           ram: 1024
@@ -187,20 +214,26 @@ cxs:
           maxShares: 2000
     database:
       sid: cx6_targeting
+    service:
+      enabled: true
+      nameOverride: targeting
   thumbnailservice:
     enabled: false
     app:
       name: thumbnailservice
       image:
         repository: thumbnailservice
-        tag: CXS-6.2.3.1-latest
+        tag: CXS-6.2.5
+    service:
+      enabled: true
+      nameOverride: thumbnailservice
   space-controller:
     enabled: false
     app:
       name: space-controller
       image:
         repository: space-controller
-        tag: CXS-6.2.3.1-latest
+        tag: CXS-6.2.5
       resources:
         memory:
           ram: 1024
@@ -211,19 +244,25 @@ cxs:
       sid: cx6_space_controller
     env:
       "SPRING_APPLICATION_NAME": "space-controller"
+    service:
+      enabled: true
+      nameOverride: space-controller
   versionmanagementpersistenceservice:
     enabled: false
     app:
       name: versionmanagementpersistenceservice
       image:
         repository: versionmanagement-persistence-service
-        tag: CXS-6.2.3.1-latest
+        tag: CXS-6.2.5
       resources:
         cpu:
           minShares: 100
           maxShares: 1000
     database:
       sid: cx6_versionmanagement
+    service:
+      enabled: true
+      nameOverride: versionmanagementpersistenceservice
 
 backbase-statics:
   image:
@@ -235,16 +274,16 @@ backbase-statics:
       - repository: https://repo.backbase.com
         ## API KEY to access JFrog Artifactory repository
         ## For other repositories use own keys
-        apikey: 
+        apikey:
         ## Username and password in case you don't want to use an API KEY to access JFrog Artifactory
         ## IMPORTANT! only 1 authentication method is required
-        username: trainingbe2020wk22
-        password: tQ<nBpD$bmDF
+        username: <yourRepoUsername>
+        password: <yourRepoPassword>
         statics:
-        - /backbase-6-release/com/backbase/tools/cx/cx6-import-tool-cli/6.2.2/cx6-import-tool-cli-6.2.2.jar
-        - /backbase-6-release/com/backbase/cxp/editorial-collection/b3554/editorial-collection-b3554.zip
-        - /expert-release-local/com/backbase/web-sdk/collection/collection-bb-web-sdk/1.10.0/collection-bb-web-sdk-1.10.0.zip
-        - /backbase-6-release/com/backbase/cxp/experience-manager/b3554/experience-manager-b3554.zip
+          - /backbase-6-release/com/backbase/tools/cx/cx6-import-tool-cli/6.2.5-b64/cx6-import-tool-cli-6.2.5-b64.jar
+          - /backbase-6-release/com/backbase/cxp/editorial-collection/b3591/editorial-collection-b3591.zip
+          - /expert-release-local/com/backbase/web-sdk/collection/collection-bb-web-sdk/1.11.0/collection-bb-web-sdk-1.11.0.zip
+          - /backbase-6-release/com/backbase/cxp/experience-manager/b3591/experience-manager-b3591.zip
     target:
       context: http://edge:8080/api/provisioning
       auth-url: http://edge:8080/api/auth/login
