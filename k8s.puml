@@ -51,7 +51,7 @@ Cluster_Boundary(cluster, "Kubernetes Cluster") {
         KubernetesPod(KubernetesBE2, "CS", "")
         KubernetesPod(KubernetesBE3, "Provisioning", "")
         KubernetesPod(KubernetesBE4, "Auth", "")
-        KubernetesPod(KubernetesUtil1, "Eureka", "")
+'        KubernetesPod(KubernetesUtil1, "Eureka", "")
         KubernetesPod(KubernetesUtil2, "Edge", "")
         KubernetesPod(KubernetesUtil3, "ActiveMQ", "")
         KubernetesPod(KubernetesUtil4, "MySQL", "")
@@ -61,7 +61,7 @@ Cluster_Boundary(cluster, "Kubernetes Cluster") {
         KubernetesSecret(KubernetesSecretJWT, "jwt", "")
 
         KubernetesSvc(svcAMQ, "ActiveMQ \nClusterIP \nservice", "")
-        KubernetesSvc(svcEureka, "Eureka \nClusterIP \nservice", "")
+'        KubernetesSvc(svcEureka, "Eureka \nClusterIP \nservice", "")
         KubernetesSvc(svcEdge, "Edge \nClusterIP \nservice", "")
         KubernetesSvc(svcDB, "MySQL \nClusterIP \nservice", "")
     }
@@ -74,8 +74,6 @@ Rel(userAlias, ingress, "HTTP", "get HTTP/1.1 kubernetes.docker.internal/api/cxp
 
 Rel(ingress, svcEdge, " ")
 Rel(svcEdge, KubernetesUtil2, " ")
-Rel(svcEdge, svcEureka, " ")
-Rel(svcEureka, KubernetesUtil1, " ")
 Rel(KubernetesUtil2, KubernetesBE1, " ")
 Rel(KubernetesUtil2, KubernetesBE2, " ")
 Rel(KubernetesUtil2, KubernetesBE3, " ")
