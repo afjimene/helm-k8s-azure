@@ -29,6 +29,21 @@ Nginx
 ```
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-0.31.1/deploy/static/provider/cloud/deploy.yaml
 ```
+## Adding Backbase Charts repo to local
+
+Run `helm repo list` to check if `backbase-charts` is added to your local. If not add by running following command:
+```
+helm repo add backbase-charts https://repo.backbase.com/backbase-charts --username "$username" --password "$password"
+helm repo update
+```
+
+## How to use
+
+Update dependencies
+
+```
+helm dependency update local-k8s
+```
 
 ## How to use
 If you do not have the images locally please add `regcred` secret
@@ -44,8 +59,7 @@ Change `<yourRepoUsername>` and `<yourRepoPassword>` with your Repo credentials 
 
 ## Install
 ```
-helm repo add bb-github https://backbase.github.io/helm-k8s-local/
-helm install bb-github/local-k8s --name=local-k8s --wait
+helm install local-k8s --name=local-k8s --wait
 ```
 
 ## Verify

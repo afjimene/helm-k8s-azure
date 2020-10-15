@@ -48,13 +48,9 @@ ips-edge:
       GATEWAY_ACTUATOR_USER: "admin"
       GATEWAY_ACTUATOR_PASSWORD: "admin"
     app:
-      name: edge
       image:
         repository: edge
-        tag: IPS-1.12.0
-    service:
-      enabled: true
-      nameOverride: edge
+        tag: IPS-1.12.4
     ingress:
       enabled: true
       annotations:
@@ -72,9 +68,6 @@ ips-authentication-dev:
       image:
         repository: authentication-dev
         tag: IPS-1.12.0-no-production
-    service:
-      enabled: true
-      nameOverride: auth
 
 ips-bas-token-converter:
   bas-token-converter:
@@ -83,10 +76,7 @@ ips-bas-token-converter:
     app:
       image:
         repository: bb-authentication-token-converter-service
-        tag: IPS-1.12.0
-    service:
-      enabled: true
-      nameOverride: token-converter
+        tag: IPS-1.12.4
 
 cxs:
   auditing:
@@ -97,9 +87,6 @@ cxs:
         repository: auditing
     database:
       sid: cx6_audit
-    service:
-      enabled: true
-      nameOverride: auditing
 
   contentservices:
     enabled: true
@@ -107,7 +94,7 @@ cxs:
       name: contentservices
       image:
         repository: contentservices
-        tag: CXS-6.2.5
+        tag: CXS-6.2.9
       resources:
         memory:
           ram: 1024
@@ -116,18 +103,14 @@ cxs:
           maxShares: 2000
     database:
       sid: cx6_contentservices
-    service:
-      enabled: true
-      nameOverride: contentservices
 
   portal:
     enabled: true
     app:
       name: portal
       image:
-        # Provide here correct Docker image (portal-exec-jar)
         repository: portal
-        tag: CXS-6.2.5
+        tag: CXS-6.2.9
       resources:
         memory:
           ram: 1024
@@ -158,7 +141,7 @@ cxs:
       name: provisioning
       image:
         repository: provisioning
-        tag: CXS-6.2.5
+        tag: CXS-6.2.9
       resources:
         memory:
           ram: 1024
@@ -167,9 +150,6 @@ cxs:
           maxShares: 2000
     database:
       sid: cx6_provisioning
-    service:
-      enabled: true
-      nameOverride: provisioning
 
   pushintegrationservice:
     enabled: false
@@ -177,35 +157,29 @@ cxs:
       name: pushintegrationservice
       image:
         repository: push-integration-service
-        tag: CXS-6.2.5
+        tag: CXS-6.2.9
     database:
       sid: cx6_push_integration
     env:
       "eureka.instance.non-secure-port": "8080"
-    service:
-      enabled: true
-      nameOverride: pushintegrationservice
   renditionservice:
     enabled: false
     app:
       name: renditionservice
       image:
         repository: renditionservice
-        tag: CXS-6.2.5
+        tag: CXS-6.2.9
     database:
       sid: cx6_renditionservice
     env:
       "renditionservice.extension-points.enabled": "true"
-    service:
-      enabled: true
-      nameOverride: renditionservice
   targeting:
     enabled: false
     app:
       name: targeting
       image:
         repository: targeting
-        tag: CXS-6.2.5
+        tag: CXS-6.2.9
       resources:
         memory:
           ram: 1024
@@ -214,26 +188,20 @@ cxs:
           maxShares: 2000
     database:
       sid: cx6_targeting
-    service:
-      enabled: true
-      nameOverride: targeting
   thumbnailservice:
     enabled: false
     app:
       name: thumbnailservice
       image:
         repository: thumbnailservice
-        tag: CXS-6.2.5
-    service:
-      enabled: true
-      nameOverride: thumbnailservice
+        tag: CXS-6.2.9
   space-controller:
     enabled: false
     app:
       name: space-controller
       image:
         repository: space-controller
-        tag: CXS-6.2.5
+        tag: CXS-6.2.9
       resources:
         memory:
           ram: 1024
@@ -244,25 +212,19 @@ cxs:
       sid: cx6_space_controller
     env:
       "SPRING_APPLICATION_NAME": "space-controller"
-    service:
-      enabled: true
-      nameOverride: space-controller
   versionmanagementpersistenceservice:
     enabled: false
     app:
       name: versionmanagementpersistenceservice
       image:
         repository: versionmanagement-persistence-service
-        tag: CXS-6.2.5
+        tag: CXS-6.2.9
       resources:
         cpu:
           minShares: 100
           maxShares: 1000
     database:
       sid: cx6_versionmanagement
-    service:
-      enabled: true
-      nameOverride: versionmanagementpersistenceservice
 
 backbase-statics:
   image:
@@ -280,10 +242,10 @@ backbase-statics:
         username: trainingbe2020wk28
         password: 8UiI9y$%LEo3
         statics:
-          - /backbase-6-release/com/backbase/tools/cx/cx6-import-tool-cli/6.2.5-b64/cx6-import-tool-cli-6.2.5-b64.jar
-          - /backbase-6-release/com/backbase/cxp/editorial-collection/b3591/editorial-collection-b3591.zip
-          - /expert-release-local/com/backbase/web-sdk/collection/collection-bb-web-sdk/1.11.0/collection-bb-web-sdk-1.11.0.zip
-          - /backbase-6-release/com/backbase/cxp/experience-manager/b3591/experience-manager-b3591.zip
+          - /backbase-6-release/com/backbase/tools/cx/cx6-import-tool-cli/6.2.9-b1/cx6-import-tool-cli-6.2.9-b1.jar
+          - /backbase-6-release/com/backbase/cxp/editorial-collection/b3683/editorial-collection-b3683.zip
+          - /expert-release-local/com/backbase/web-sdk/collection/collection-bb-web-sdk/1.13.1/collection-bb-web-sdk-1.13.1.zip
+          - /backbase-6-release/com/backbase/cxp/experience-manager/b3683/experience-manager-b3683.zip
     target:
       context: http://edge:8080/api/provisioning
       auth-url: http://edge:8080/api/auth/login
