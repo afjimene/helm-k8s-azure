@@ -76,3 +76,4 @@ All configuration is provided in values.yaml
 
 - 0.0.1: Initial release
 - 0.1.0: Update Edge 2 and Registry removed
+- 0.1.2: Charts and App version update
