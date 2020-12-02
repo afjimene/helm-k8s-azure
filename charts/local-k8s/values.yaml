@@ -14,14 +14,23 @@ global:
       registry: repo.backbase.com/backbase-docker-releases
   chartName: local-k8s
   database:
+    enabled: true
     host: mysql
+    type: mysql
+    checkEnabled: true
     existingSecret: mysql
     urlTemplate: "jdbc:mysql://{{.database.host}}:{{.database.port}}/{{.database.sid}}?useSSL=false"
   activemq:
+    enabled: true
     host: activemq
     existingSecret: activemq
   jwt:
+    enabled: true
     existingSecret: local-k8s-jwt
+    SIG_SECRET_KEY_fromSecret: true
+    EXTERNAL_SIG_SECRET_KEY_fromSecret: true
+    EXTERNAL_ENC_SECRET_KEY_fromSecret: true
+    USERCTX_KEY_fromSecret: true
   registry:
     enabled: false
 
@@ -50,7 +59,7 @@ ips-edge:
     app:
       image:
         repository: edge
-        tag: IPS-1.12.4
+        tag: IPS-1.12.6
     ingress:
       enabled: true
       annotations:
@@ -67,7 +76,7 @@ ips-authentication-dev:
     app:
       image:
         repository: authentication-dev
-        tag: IPS-1.12.0-no-production
+        tag: IPS-1.12.6-no-production
 
 ips-bas-token-converter:
   bas-token-converter:
@@ -76,7 +85,7 @@ ips-bas-token-converter:
     app:
       image:
         repository: bb-authentication-token-converter-service
-        tag: IPS-1.12.4
+        tag: IPS-1.12.6
 
 cxs:
   auditing:
@@ -94,7 +103,7 @@ cxs:
       name: contentservices
       image:
         repository: contentservices
-        tag: CXS-6.2.9
+        tag: CXS-6.2.10
       resources:
         memory:
           ram: 1024
@@ -110,7 +119,7 @@ cxs:
       name: portal
       image:
         repository: portal
-        tag: CXS-6.2.9
+        tag: CXS-6.2.10
       resources:
         memory:
           ram: 1024
@@ -141,7 +150,7 @@ cxs:
       name: provisioning
       image:
         repository: provisioning
-        tag: CXS-6.2.9
+        tag: CXS-6.2.10
       resources:
         memory:
           ram: 1024
@@ -157,7 +166,7 @@ cxs:
       name: pushintegrationservice
       image:
         repository: push-integration-service
-        tag: CXS-6.2.9
+        tag: CXS-6.2.10
     database:
       sid: cx6_push_integration
     env:
@@ -168,7 +177,7 @@ cxs:
       name: renditionservice
       image:
         repository: renditionservice
-        tag: CXS-6.2.9
+        tag: CXS-6.2.10
     database:
       sid: cx6_renditionservice
     env:
@@ -179,7 +188,7 @@ cxs:
       name: targeting
       image:
         repository: targeting
-        tag: CXS-6.2.9
+        tag: CXS-6.2.10
       resources:
         memory:
           ram: 1024
@@ -194,14 +203,14 @@ cxs:
       name: thumbnailservice
       image:
         repository: thumbnailservice
-        tag: CXS-6.2.9
+        tag: CXS-6.2.10
   space-controller:
     enabled: false
     app:
       name: space-controller
       image:
         repository: space-controller
-        tag: CXS-6.2.9
+        tag: CXS-6.2.10
       resources:
         memory:
           ram: 1024
@@ -218,7 +227,7 @@ cxs:
       name: versionmanagementpersistenceservice
       image:
         repository: versionmanagement-persistence-service
-        tag: CXS-6.2.9
+        tag: CXS-6.2.10
       resources:
         cpu:
           minShares: 100
@@ -239,13 +248,13 @@ backbase-statics:
         apikey:
         ## Username and password in case you don't want to use an API KEY to access JFrog Artifactory
         ## IMPORTANT! only 1 authentication method is required
-        username: trainingbe2020wk28
-        password: 8UiI9y$%LEo3
+        username: <yourRepoUsername>
+        password: <yourRepoPassword>
         statics:
-          - /backbase-6-release/com/backbase/tools/cx/cx6-import-tool-cli/6.2.9-b1/cx6-import-tool-cli-6.2.9-b1.jar
-          - /backbase-6-release/com/backbase/cxp/editorial-collection/b3683/editorial-collection-b3683.zip
-          - /expert-release-local/com/backbase/web-sdk/collection/collection-bb-web-sdk/1.13.1/collection-bb-web-sdk-1.13.1.zip
-          - /backbase-6-release/com/backbase/cxp/experience-manager/b3683/experience-manager-b3683.zip
+          - /backbase-6-release/com/backbase/tools/cx/cx6-import-tool-cli/6.2.10-b1/cx6-import-tool-cli-6.2.10-b1.jar
+          - /backbase-6-release/com/backbase/cxp/editorial-collection/2.0.0-b340/editorial-collection-2.0.0-b340.zip
+          - /expert-release-local/com/backbase/web-sdk/collection/collection-bb-web-sdk/1.14.0/collection-bb-web-sdk-1.14.0.zip
+          - /backbase-6-release/com/backbase/cxp/experience-manager/2.0.0-b340/experience-manager-2.0.0-b340.zip
     target:
       context: http://edge:8080/api/provisioning
       auth-url: http://edge:8080/api/auth/login
