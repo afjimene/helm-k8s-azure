@@ -17,17 +17,21 @@ A Kubernetes cluster
 https://medium.com/p/kubernetes-in-local-the-easy-way-f8ef2b98be68?source=email-751ac5929c0e--writer.postDistributed&sk=1cf6c2f31d82d836a2a75503b2fb17be
 
 
-Helm 2
+Helm - https://helm.sh/docs/intro/install/
 ```
-brew install helm@2
+brew install helm
 ```
-Tiller
+or for windows
 ```
-helm init
+choco install kubernetes-helm
 ```
-Nginx
+
+Nginx - https://docs.nginx.com/nginx-ingress-controller/installation/installation-with-helm/
+
 ```
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-0.31.1/deploy/static/provider/cloud/deploy.yaml
+helm repo add nginx-stable https://helm.nginx.com/stable
+helm repo update
+helm install my-release nginx-stable/nginx-ingress
 ```
 ## Adding Backbase Charts repo to local
 
@@ -59,7 +63,7 @@ Change `<yourRepoUsername>` and `<yourRepoPassword>` with your Repo credentials 
 
 ## Install
 ```
-helm install local-k8s --name=local-k8s --wait
+helm install bb-local local-k8s
 ```
 
 ## Verify
@@ -76,4 +80,4 @@ All configuration is provided in values.yaml
 
 - 0.0.1: Initial release
 - 0.1.0: Update Edge 2 and Registry removed
-- 0.1.2: Charts and App version update
+- 0.2.0: Charts and App version update
