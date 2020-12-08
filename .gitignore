@@ -14,7 +14,9 @@
 .AppleDouble
 .LSOverride
 
-  
+# Chart dependencies
+**/charts/*.tgz
+
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
