@@ -9,6 +9,8 @@ keywords:
 maintainers:
   - name: Andrés Torres
     email: andres@backbase.com
+  - name: Dhananjay Singh
+    email: dhananjay@backbase.com
 icon: https://start.backbase.com/favicon.png
 
 dependencies:
