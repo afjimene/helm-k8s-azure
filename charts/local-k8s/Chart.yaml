@@ -16,7 +16,7 @@ icon: https://start.backbase.com/favicon.png
 dependencies:
   - name: backbase-env
     repository: https://repo.backbase.com/backbase-charts
-    version: 0.5.45
+    version: 0.5.51
   - name: ips-edge
     repository: https://repo.backbase.com/backbase-charts
     version: 0.10.1
@@ -29,6 +29,6 @@ dependencies:
   - name: cxs
     repository: https://repo.backbase.com/backbase-charts
     version: 0.8.0
-  - name: backbase-statics
-    repository: https://repo.backbase.com/backbase-charts
-    version: 0.1.8
+#  - name: backbase-operator
+#    repository: https://backbase.github.io/helm-k8s-local
+#    version: 0.1.0
