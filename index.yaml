@@ -2,15 +2,26 @@ apiVersion: v1
 entries:
   backbase-operator:
   - apiVersion: v2
-    appVersion: 1.16.0
-    created: "2021-01-21T18:26:44.61196+01:00"
+    appVersion: 1.0-SNAPSHOT
+    created: "2021-01-21T23:45:49.943157976Z"
     description: A Helm chart for Backbase Statics Operator
-    digest: 7a31904ec7b75889fd661945ca560adc7a66b6a137cade5a90a5f01c04859e1c
+    digest: 458d40f33f1632d7f17c9bc51233ac8e8eeefdfaa5377e26cceaec0569fee1ce
     icon: https://start.backbase.com/favicon.png
     name: backbase-operator
     type: application
     urls:
-    - https://github.com/Backbase/helm-k8s-local/releases/download/backbase-operator-0.1.0/backbase-operator-0.1.0.tgz
+    - https://backbase.github.io/helm-k8s-local/backbase-operator-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 1.0-SNAPSHOT
+    created: "2021-01-21T23:45:49.943518087Z"
+    description: A Helm chart for Backbase Statics Operator
+    digest: f8771b3a5bb3ec1b9b6972c3dc9d001b38f5a53c81c1ea733f9ccf9ff3b34427
+    icon: https://start.backbase.com/favicon.png
+    name: backbase-operator
+    type: application
+    urls:
+    - https://backbase.github.io/helm-k8s-local/charts/backbase-operator-0.1.0.tgz
     version: 0.1.0
   local-k8s:
   - apiVersion: v2
@@ -233,4 +244,4 @@ entries:
     urls:
     - https://github.com/Backbase/helm-k8s-local/releases/download/local-k8s-0.0.1/local-k8s-0.0.1.tgz
     version: 0.0.1
-generated: "2020-05-11T12:06:44.982187356Z"
+generated: "2021-01-21T23:45:49.942574957Z"
