@@ -1,0 +1,15 @@
+apiVersion: v1
+entries:
+  backbase-operator:
+  - apiVersion: v2
+    appVersion: 1.0-SNAPSHOT
+    created: "2021-01-21T23:37:17.544687096Z"
+    description: A Helm chart for Backbase Statics Operator
+    digest: f8771b3a5bb3ec1b9b6972c3dc9d001b38f5a53c81c1ea733f9ccf9ff3b34427
+    icon: https://start.backbase.com/favicon.png
+    name: backbase-operator
+    type: application
+    urls:
+    - https://backbase.github.io/helm-k8s-local/charts/backbase-operator-0.1.0.tgz
+    version: 0.1.0
+generated: "2021-01-21T23:37:17.544057583Z"
