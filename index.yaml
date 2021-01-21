@@ -10,7 +10,7 @@ entries:
     name: backbase-operator
     type: application
     urls:
-    - https://backbase.github.io/backbase-operator-0.1.0.tgz
+    - https://github.com/Backbase/helm-k8s-local/releases/download/backbase-operator-0.1.0/backbase-operator-0.1.0.tgz
     version: 0.1.0
   local-k8s:
   - apiVersion: v2
