@@ -1,7 +1,7 @@
 apiVersion: v2
 name: local-k8s
 description: A Helm Chart for Backbase Customer Experience Services
-version: 0.2.0
+version: 0.3.0
 appVersion: 6.2.10
 keywords:
   - backbase
@@ -29,6 +29,6 @@ dependencies:
   - name: cxs
     repository: https://repo.backbase.com/backbase-charts
     version: 0.8.0
-#  - name: backbase-operator
-#    repository: https://backbase.github.io/helm-k8s-local
-#    version: 0.1.0
+  - name: backbase-operator
+    repository: https://backbase.github.io/helm-k8s-local
+    version: 0.1.0
