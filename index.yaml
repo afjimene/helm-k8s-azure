@@ -3,9 +3,9 @@ entries:
   backbase-operator:
   - apiVersion: v2
     appVersion: 1.0-SNAPSHOT
-    created: "2021-01-21T23:45:49.943157976Z"
+    created: "2021-01-22T00:50:19.955680683Z"
     description: A Helm chart for Backbase Statics Operator
-    digest: 458d40f33f1632d7f17c9bc51233ac8e8eeefdfaa5377e26cceaec0569fee1ce
+    digest: 1ff597b302544c21bd8ef69ff88188a3ba27dbe62677c5655871cac125a3c31a
     icon: https://start.backbase.com/favicon.png
     name: backbase-operator
     type: application
@@ -233,4 +233,4 @@ entries:
     urls:
     - https://github.com/Backbase/helm-k8s-local/releases/download/local-k8s-0.0.1/local-k8s-0.0.1.tgz
     version: 0.0.1
-generated: "2021-01-21T23:45:49.942574957Z"
+generated: "2021-01-22T00:50:19.955058286Z"
