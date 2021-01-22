@@ -15,6 +15,46 @@ entries:
   local-k8s:
   - apiVersion: v2
     appVersion: 6.2.10
+    created: "2021-01-22T11:30:58.563708904Z"
+    dependencies:
+    - name: backbase-env
+      repository: https://repo.backbase.com/backbase-charts
+      version: 0.5.51
+    - name: ips-edge
+      repository: https://repo.backbase.com/backbase-charts
+      version: 0.10.1
+    - name: ips-bas-token-converter
+      repository: https://repo.backbase.com/backbase-charts
+      version: 0.9.1
+    - name: ips-authentication-dev
+      repository: https://repo.backbase.com/backbase-charts
+      version: 0.9.0
+    - name: cxs
+      repository: https://repo.backbase.com/backbase-charts
+      version: 0.8.0
+    - name: backbase-statics
+      repository: https://repo.backbase.com/backbase-charts
+      version: 0.1.8
+    - name: nginx-ingress
+      repository: https://helm.nginx.com/stable
+      version: 0.7.1
+    description: A Helm Chart for Backbase Customer Experience Services
+    digest: 44b59ada4938d88035023bf91b711b8b2552fd11efba4ace696d3af12ed31762
+    icon: https://start.backbase.com/favicon.png
+    keywords:
+    - backbase
+    - cxs
+    maintainers:
+    - email: andres@backbase.com
+      name: Andrés Torres
+    - email: dhananjay@backbase.com
+      name: Dhananjay Singh
+    name: local-k8s
+    urls:
+    - https://github.com/Backbase/helm-k8s-local/releases/download/local-k8s-0.4.0/local-k8s-0.4.0.tgz
+    version: 0.4.0
+  - apiVersion: v2
+    appVersion: 6.2.10
     created: "2021-01-22T00:25:12.447460979Z"
     dependencies:
     - name: backbase-env
