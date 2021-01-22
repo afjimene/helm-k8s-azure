@@ -14,8 +14,11 @@ dependencies:
 - name: cxs
   repository: https://repo.backbase.com/backbase-charts
   version: 0.8.0
-- name: backbase-operator
-  repository: https://backbase.github.io/helm-k8s-local
-  version: 0.1.1
-digest: sha256:f8530f6ec47210af7602f1071e21c11d22d64c90441adb56bc8e6aff643dad39
-generated: "2021-01-22T00:50:14.641562+01:00"
+- name: backbase-statics
+  repository: https://repo.backbase.com/backbase-charts
+  version: 0.1.8
+- name: nginx-ingress
+  repository: https://helm.nginx.com/stable
+  version: 0.7.1
+digest: sha256:31a79c3e369aaa29dbc823d4741c07cbf30506579d138239622983767e8d558a
+generated: "2021-01-22T09:50:19.083164+01:00"

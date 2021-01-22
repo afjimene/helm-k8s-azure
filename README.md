@@ -26,17 +26,11 @@ or for windows
 choco install kubernetes-helm
 ```
 
-Nginx - https://docs.nginx.com/nginx-ingress-controller/installation/installation-with-helm/
-
-```
-helm repo add nginx-stable https://helm.nginx.com/stable
-helm repo update
-helm install my-release nginx-stable/nginx-ingress
-```
 ## Adding Backbase Charts repo to local
 
-Run `helm repo list` to check if `backbase-charts` is added to your local. If not add by running following command:
+Run `helm repo list` to check if `backbase-charts` and `nginx-stable` are added to your local. If not add them by running following command:
 ```
+helm repo add nginx-stable https://helm.nginx.com/stable
 helm repo add backbase-charts https://repo.backbase.com/backbase-charts --username "$username" --password "$password"
 helm repo update
 ```
@@ -81,3 +75,4 @@ All configuration is provided in values.yaml
 - 0.0.1: Initial release
 - 0.1.0: Update Edge 2 and Registry removed
 - 0.2.0: Charts and App version update
+- 0.4.0: Nginx chart added
