@@ -79,19 +79,22 @@ identity:
       "quarkus.datasource.jdbc.transaction-isolation-level": "2"
       KEYCLOAK_ADMIN: "admin"
       KEYCLOAK_ADMIN_PASSWORD: "admin"
+      KEYCLOAK_PASSWORD: "admin"
+      KEYCLOAK_USER: "admin"
       QUARKUS_HTTP_CORS_ORIGINS: "http://kubernetes.docker.internal"
       KEYCLOAK_BACKBASE_SESSION_LIMIT_DEFAULT_STRATEGY: 'FIFO'
       KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_NAME: 'backbase'
       KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMIT_NAME: 'session-limit'
       KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMIT_STRATEGY: 'FIFO'
       KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMIT_LIMIT: '2'
+      JAVA_TOOL_OPTIONS: "-Dkeycloak.migration.action=import -Dkeycloak.profile.feature.upload_scripts=enabled"
     volumeMounts:
       - mountPath: /tmp/keycloak-export/
         name: config
     volumes:
       - name: config
         configMap:
-          name: identity-configmap
+          name: identity-configmap:
           items:
             - key: backbase-realm.json
               path: backbase-realm.json
