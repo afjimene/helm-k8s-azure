@@ -71,21 +71,92 @@ ips-edge:
           paths:
             - /
 
-ips-authentication-dev:
-  authentication-dev:
-    app:
-      image:
-        repository: authentication-dev
-        tag: IPS-1.12.6-no-production
-
-ips-bas-token-converter:
-  bas-token-converter:
+identity:
+  backbaseidentity:
+    database:
+      sid: "backbase_identity"
     env:
-      "SPRING_AUTOCONFIGURE_EXCLUDE": "org.springframework.cloud.function.context.config.ContextFunctionCatalogAutoConfiguration"
+      "quarkus.datasource.jdbc.transaction-isolation-level": "2"
+      KEYCLOAK_ADMIN: "admin"
+      KEYCLOAK_ADMIN_PASSWORD: "admin"
+      QUARKUS_HTTP_CORS_ORIGINS: "http://kubernetes.docker.internal"
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_DEFAULT_STRATEGY: 'FIFO'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_NAME: 'backbase'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMIT_NAME: 'session-limit'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMIT_STRATEGY: 'FIFO'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMIT_LIMIT: '2'
+    volumeMounts:
+      - mountPath: /tmp/keycloak-export/
+        name: config
+    volumes:
+      - name: config
+        configMap:
+          name: identity-configmap
+          items:
+            - key: backbase-realm.json
+              path: backbase-realm.json
+            - key: keycloak-add-user.json
+              path: keycloak-add-user.json
     app:
+      name: backbaseidentity
       image:
-        repository: bb-authentication-token-converter-service
-        tag: IPS-1.12.6
+        repository: backbase-identity
+        tag: IDENTITY-1.7.3
+      ports:
+        - name: http
+          port: 8080
+          protocol: TCP
+          targetPort: http
+        - name: infinispan
+          port: 7800
+          protocol: TCP
+    service:
+      enabled: true
+      nameOverride: backbaseidentity
+      additionalPorts:
+        - name: infinispan
+          port: 7800
+          protocol: TCP
+          targetPort: infinispan
+    ingress:
+      enabled: true
+      annotations:
+        "kubernetes.io/ingress.class": "nginx"
+        "nginx.ingress.kubernetes.io/proxy-read-timeout": "600"
+        "nginx.ingress.kubernetes.io/proxy-buffer-size": "16k"
+        "nginx.ingress.kubernetes.io/ssl-redirect": "false"
+        #"nginx.ingress.kubernetes.io/use-regex": "true"
+      hosts:
+        - host: "identity.docker.internal"
+          paths:
+            - /
+  oidctokenconverter:
+    enabled: true
+    env:
+      BACKBASE_OIDCTOKENCONVERTER_WHITELISTEDDOMAINS_0_INTERNALHOST: 'identity.docker.internal'
+      BACKBASE_OIDCTOKENCONVERTER_WHITELISTEDDOMAINS_0_ISSUERHOST: kubernetes.docker.internal
+      SSO_JWT_EXTERNAL_EXPIRATION: 3600
+      SSO_JWT_EXTERNAL_NOT_VALID_AFTER: 30000
+      SSO_JWT_EXTERNAL_RENEW: 36000
+    app:
+      name: oidctokenconverter
+      image:
+        repository: oidc-token-converter-service
+        tag: IDENTITY-1.7.3
+  identityintegrationservice:
+    enabled: false
+  fidoservice:
+    enabled: false
+  devicemanagementservice:
+    enabled: false
+  confirmation:
+    enabled: false
+  transactionsigningmock:
+    enabled: false
+  hardtokenoutboundintegrationmock:
+    enabled: false
+  communicationsoutboundintegrationmock:
+    enabled: false
 
 cxs:
   auditing:
@@ -257,17 +328,24 @@ backbase-statics:
           - /backbase-6-release/com/backbase/cxp/experience-manager/2.0.0-b340/experience-manager-2.0.0-b340.zip
     target:
       context: http://edge:8080/api/provisioning
-      auth-url: http://edge:8080/api/auth/login
-      identity-real:
+      auth-url: http://backbaseidentity:8080
+      identity-scope: openid
+      identity-grant-type: password
+      identity-client-id: bb-tooling-client
+      identity-realm: backbase
       username: admin
       password: admin
-      retry-max-attempts: 200
-      retry-back-off-period: 2000
+      retry-max-attempts: 1500
+      retry-back-off-period: 5000
 
     check:
       enabled: true
       targets:
-        - name: Authentication
-          url: http://edge:8080/api/auth/actuator/health
-        - name: 8080/api/provisioning
+        - name: Provisioning
           url: http://edge:8080/api/provisioning/actuator/health
+        - name: Portal
+          url: http://edge:8080/api/portal/actuator/health
+        - name: Contentservices
+          url: http://edge:8080/api/contentservices/actuator/health
+        - name: Identity
+          url: http://backbaseidentity:8080/auth/realms/backbase/.well-known/openid-configuration

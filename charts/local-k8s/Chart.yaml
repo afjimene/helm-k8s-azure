@@ -16,23 +16,20 @@ icon: https://start.backbase.com/favicon.png
 dependencies:
   - name: backbase-env
     repository: https://repo.backbase.com/backbase-charts
-    version: 0.5.51
+    version: 0.5.48
   - name: ips-edge
     repository: https://repo.backbase.com/backbase-charts
     version: 0.10.1
-  - name: ips-bas-token-converter
+#  - name: cxs
+#    repository: https://repo.backbase.com/backbase-charts
+#    version: 0.8.0
+#  - name: backbase-statics
+#    repository: https://repo.backbase.com/backbase-charts
+#    version: 0.1.8
+#  - name: nginx-ingress
+#    repository: https://helm.nginx.com/stable
+#    version: 0.7.1
+  - name: identity
     repository: https://repo.backbase.com/backbase-charts
-    version: 0.9.1
-  - name: ips-authentication-dev
-    repository: https://repo.backbase.com/backbase-charts
-    version: 0.9.0
-  - name: cxs
-    repository: https://repo.backbase.com/backbase-charts
-    version: 0.8.0
-  - name: backbase-statics
-    repository: https://repo.backbase.com/backbase-charts
-    version: 0.1.8
-  - name: nginx-ingress
-    repository: https://helm.nginx.com/stable
-    version: 0.7.1
+    version: 0.12.0
 

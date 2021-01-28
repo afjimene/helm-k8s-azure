@@ -1,24 +1,12 @@
 dependencies:
 - name: backbase-env
   repository: https://repo.backbase.com/backbase-charts
-  version: 0.5.51
+  version: 0.5.48
 - name: ips-edge
   repository: https://repo.backbase.com/backbase-charts
   version: 0.10.1
-- name: ips-bas-token-converter
+- name: identity
   repository: https://repo.backbase.com/backbase-charts
-  version: 0.9.1
-- name: ips-authentication-dev
-  repository: https://repo.backbase.com/backbase-charts
-  version: 0.9.0
-- name: cxs
-  repository: https://repo.backbase.com/backbase-charts
-  version: 0.8.0
-- name: backbase-statics
-  repository: https://repo.backbase.com/backbase-charts
-  version: 0.1.8
-- name: nginx-ingress
-  repository: https://helm.nginx.com/stable
-  version: 0.7.1
-digest: sha256:31a79c3e369aaa29dbc823d4741c07cbf30506579d138239622983767e8d558a
-generated: "2021-01-22T09:50:19.083164+01:00"
+  version: 0.12.0
+digest: sha256:e30748f3d87ded0e8e24b7b1bb5db107e0c730da46f88f7843e09bcddfd7c1b7
+generated: "2021-01-28T13:06:02.514567+01:00"
