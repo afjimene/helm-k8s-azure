@@ -5,5 +5,5 @@ metadata:
 data:
   backbase-realm.json: |-
 {{ .Files.Get "support-files/backbase-realm.json" | indent 4}}
-  keycloak-add-user.json: |-
-{{ .Files.Get "support-files/keycloak-add-user.json" | indent 4}}
+  backbase-users-0.json: |-
+{{ .Files.Get "support-files/backbase-users-0.json" | indent 4}}

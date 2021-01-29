@@ -1,4 +1,7 @@
 global:
+  ipsVersion: IPS-1.13.0
+  cxVersion: CXS-6.3.0
+  identityVersion: IDENTITY-1.7.3
   env:
     "EUREKA_CLIENT_ENABLED": "false"
     "SPRING_CLOUD_KUBERNETES_ENABLED": "true"
@@ -59,12 +62,12 @@ ips-edge:
     app:
       image:
         repository: edge
-        tag: IPS-1.12.6
+        tagFrom: ipsVersion
     ingress:
       enabled: true
       annotations:
         "kubernetes.io/ingress.class": "nginx"
-        "nginx.ingress.kubernetes.io/proxy-body-size": "50m"
+        "nginx.ingress.kubernetes.io/proxy-body-size": "100m"
         "nginx.ingress.kubernetes.io/ssl-redirect": "false"
       hosts:
         - host: "kubernetes.docker.internal"
@@ -84,27 +87,31 @@ identity:
       QUARKUS_HTTP_CORS_ORIGINS: "http://kubernetes.docker.internal"
       KEYCLOAK_BACKBASE_SESSION_LIMIT_DEFAULT_STRATEGY: 'FIFO'
       KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_NAME: 'backbase'
-      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMIT_NAME: 'session-limit'
-      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMIT_STRATEGY: 'FIFO'
-      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMIT_LIMIT: '2'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITDIRECTGRANT_NAME: 'session-limit-direct-grant'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITDIRECTGRANT_STRATEGY: 'FIFO'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITDIRECTGRANT_LIMIT: '2'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITWEB_NAME: 'session-limit-web'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITWEB_STRATEGY: 'FIFO'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITWEB_LIMIT: '3'
       JAVA_TOOL_OPTIONS: "-Dkeycloak.migration.action=import -Dkeycloak.profile.feature.upload_scripts=enabled"
+      KEYCLOAK_BACKBASE_OIDC_TOKEN_CONVERTER_URL: "http://token-converter:8080"
     volumeMounts:
       - mountPath: /tmp/keycloak-export/
         name: config
     volumes:
       - name: config
         configMap:
-          name: identity-configmap:
+          name: identity-configmap
           items:
             - key: backbase-realm.json
               path: backbase-realm.json
-            - key: keycloak-add-user.json
-              path: keycloak-add-user.json
+            - key: backbase-users-0.json
+              path: backbase-users-0.json
     app:
       name: backbaseidentity
       image:
         repository: backbase-identity
-        tag: IDENTITY-1.7.3
+        tagFrom: identityVersion
       ports:
         - name: http
           port: 8080
@@ -136,16 +143,28 @@ identity:
   oidctokenconverter:
     enabled: true
     env:
-      BACKBASE_OIDCTOKENCONVERTER_WHITELISTEDDOMAINS_0_INTERNALHOST: 'identity.docker.internal'
-      BACKBASE_OIDCTOKENCONVERTER_WHITELISTEDDOMAINS_0_ISSUERHOST: kubernetes.docker.internal
-      SSO_JWT_EXTERNAL_EXPIRATION: 3600
-      SSO_JWT_EXTERNAL_NOT_VALID_AFTER: 30000
-      SSO_JWT_EXTERNAL_RENEW: 36000
+      BACKBASE_TOKENCONVERTER_CLAIMVALUEVALIDATION_ENABLED: "true"
+      BACKBASE_TOKENCONVERTER_VERIFYONLYNOINTERNALTOKEN: "true"
+      BACKBASE_OIDCTOKENCONVERTER_FORCEJWKSVERIFICATIONGIVENMATCHINGCLAIMS: "true"
+      BACKBASE_TOKENCONVERTER_CLAIMVALUEVALIDATION_CLAIMDENYENTRIES_0_CLAIMNAME: "acr"
+      BACKBASE_TOKENCONVERTER_CLAIMVALUEVALIDATION_CLAIMDENYENTRIES_0_CLAIMVALUES: "bb:deny"
+      BACKBASE_OIDCTOKENCONVERTER_WHITELISTEDDOMAINS_0_ISSUERHOST: "backbaseidentity"
+      BACKBASE_OIDCTOKENCONVERTER_WHITELISTEDDOMAINS_0_INTERNALHOST: "backbaseidentity:8080"
+      BACKBASE_OIDCTOKENCONVERTER_WHITELISTEDDOMAINS_1_ISSUERHOST: "identity.docker.internal"
+      BACKBASE_OIDCTOKENCONVERTER_WHITELISTEDDOMAINS_1_INTERNALHOST: "backbaseidentity:8080"
+      BACKBASE_OIDCTOKENCONVERTER_USERINFOVERIFICATION: "true"
+      BACKBASE_TOKENCONVERTER_CLAIMSMAPPING_0_EXTERNAL: "userinfo_external_claim"
+      BACKBASE_TOKENCONVERTER_CLAIMSMAPPING_0_INTERNAL: "userinfo_internal_claim"
+      BACKBASE_TOKENCONVERTER_CLAIMSMAPPING_0_REQUIRED: "false"
+      BACKBASE_TOKENCONVERTER_CLAIMSMAPPING_1_EXTERNAL: "tid"
+      BACKBASE_TOKENCONVERTER_CLAIMSMAPPING_1_INTERNAL: "tid"
+      BACKBASE_TOKENCONVERTER_CLAIMSMAPPING_1_REQUIRED: "false"
+      SPRING_AUTOCONFIGURE_EXCLUDE: "org.springframework.cloud.function.context.config.ContextFunctionCatalogAutoConfiguration"
     app:
       name: oidctokenconverter
       image:
         repository: oidc-token-converter-service
-        tag: IDENTITY-1.7.3
+        tagFrom: identityVersion
   identityintegrationservice:
     enabled: false
   fidoservice:
@@ -164,12 +183,6 @@ identity:
 cxs:
   auditing:
     enabled: false
-    app:
-      name: auditing
-      image:
-        repository: auditing
-    database:
-      sid: cx6_audit
 
   contentservices:
     enabled: true
@@ -177,7 +190,7 @@ cxs:
       name: contentservices
       image:
         repository: contentservices
-        tag: CXS-6.2.10
+        tagFrom: cxVersion
       resources:
         memory:
           ram: 1024
@@ -193,7 +206,7 @@ cxs:
       name: portal
       image:
         repository: portal
-        tag: CXS-6.2.10
+        tagFrom: cxVersion
       resources:
         memory:
           ram: 1024
@@ -224,7 +237,7 @@ cxs:
       name: provisioning
       image:
         repository: provisioning
-        tag: CXS-6.2.10
+        tagFrom: cxVersion
       resources:
         memory:
           ram: 1024
@@ -236,78 +249,16 @@ cxs:
 
   pushintegrationservice:
     enabled: false
-    app:
-      name: pushintegrationservice
-      image:
-        repository: push-integration-service
-        tag: CXS-6.2.10
-    database:
-      sid: cx6_push_integration
-    env:
-      "eureka.instance.non-secure-port": "8080"
   renditionservice:
     enabled: false
-    app:
-      name: renditionservice
-      image:
-        repository: renditionservice
-        tag: CXS-6.2.10
-    database:
-      sid: cx6_renditionservice
-    env:
-      "renditionservice.extension-points.enabled": "true"
   targeting:
     enabled: false
-    app:
-      name: targeting
-      image:
-        repository: targeting
-        tag: CXS-6.2.10
-      resources:
-        memory:
-          ram: 1024
-        cpu:
-          minShares: 100
-          maxShares: 2000
-    database:
-      sid: cx6_targeting
   thumbnailservice:
     enabled: false
-    app:
-      name: thumbnailservice
-      image:
-        repository: thumbnailservice
-        tag: CXS-6.2.10
   space-controller:
     enabled: false
-    app:
-      name: space-controller
-      image:
-        repository: space-controller
-        tag: CXS-6.2.10
-      resources:
-        memory:
-          ram: 1024
-        cpu:
-          minShares: 100
-          maxShares: 2000
-    database:
-      sid: cx6_space_controller
-    env:
-      "SPRING_APPLICATION_NAME": "space-controller"
   versionmanagementpersistenceservice:
     enabled: false
-    app:
-      name: versionmanagementpersistenceservice
-      image:
-        repository: versionmanagement-persistence-service
-        tag: CXS-6.2.10
-      resources:
-        cpu:
-          minShares: 100
-          maxShares: 1000
-    database:
-      sid: cx6_versionmanagement
 
 backbase-statics:
   image:

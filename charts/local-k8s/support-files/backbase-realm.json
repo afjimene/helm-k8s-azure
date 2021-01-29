@@ -1708,45 +1708,6 @@
       ]
     },
     {
-      "alias": "native forgot username",
-      "description": "Native flow intended to handle forgotten username for a mobile application",
-      "providerId": "basic-flow",
-      "topLevel": true,
-      "builtIn": false,
-      "authenticationExecutions": [
-        {
-          "authenticator": "native-forgot-username",
-          "requirement": "REQUIRED",
-          "priority": 10,
-          "userSetupAllowed": false,
-          "autheticatorFlow": false
-        }
-      ]
-    },
-    {
-      "alias": "native reset credentials",
-      "description": "Native flow intended to handle reset credentials for a mobile application",
-      "providerId": "basic-flow",
-      "topLevel": true,
-      "builtIn": false,
-      "authenticationExecutions": [
-        {
-          "authenticator": "native-email-verification",
-          "requirement": "REQUIRED",
-          "priority": 10,
-          "userSetupAllowed": false,
-          "autheticatorFlow": false
-        },
-        {
-          "authenticator": "direct-grant-required-actions",
-          "requirement": "REQUIRED",
-          "priority": 20,
-          "userSetupAllowed": false,
-          "autheticatorFlow": false
-        }
-      ]
-    },
-    {
       "alias": "registration",
       "description": "registration flow",
       "providerId": "basic-flow",

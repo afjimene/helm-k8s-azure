@@ -34,6 +34,16 @@ helm repo add nginx-stable https://helm.nginx.com/stable
 helm repo add backbase-charts https://repo.backbase.com/backbase-charts --username "$username" --password "$password"
 helm repo update
 ```
+## Add Identity host
+Identity will be running on a different host, so add the following in your `hosts` file:
+```
+127.0.0.1 identity.docker.internal
+```
+Location of host file in 
+- Widows - `c:\windows\system32\drivers\etc\hosts`
+- Mac - `/etc/hosts`
+
+Note - `kubernetes.docker.internal` would already be present in the hosts, which is added by `Docker Desktop`.
 
 ## How to use
 
