@@ -63,7 +63,7 @@ kubectl create secret docker-registry regcred --docker-server=https://repo.backb
 kubectl patch serviceaccount default -p "{\"imagePullSecrets\": [{\"name\": \"regcred\"}]}" -n default
 ```
 
-Change `<yourRepoUsername>` and `<yourRepoPassword>` with your Repo credentials in values.yaml
+Change `<yourRepoUsername>` and `<yourRepoPassword>` with your Repo credentials or `<api-key>` in values.yaml
 
 ## Install
 ```

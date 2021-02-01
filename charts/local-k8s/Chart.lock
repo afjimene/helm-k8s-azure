@@ -1,7 +1,7 @@
 dependencies:
 - name: backbase-env
   repository: https://repo.backbase.com/backbase-charts
-  version: 0.5.48
+  version: 0.5.51
 - name: ips-edge
   repository: https://repo.backbase.com/backbase-charts
   version: 0.10.1
@@ -17,5 +17,5 @@ dependencies:
 - name: identity
   repository: https://repo.backbase.com/backbase-charts
   version: 0.12.0
-digest: sha256:d6e56c4f4eb99d5215ba7f31cb4aac8ddb5d9a9eaf79dfe372c900af0c2c0922
-generated: "2021-01-28T21:51:15.8733722+01:00"
+digest: sha256:0a07837067456fbd6ae50c527efb9503ac97800204551a65f27e30eb36d51fc2
+generated: "2021-02-01T16:59:54.8377915+01:00"
