@@ -85,6 +85,7 @@ identity:
       KEYCLOAK_PASSWORD: "admin"
       KEYCLOAK_USER: "admin"
       QUARKUS_HTTP_CORS_ORIGINS: "http://kubernetes.docker.internal"
+      #KEYCLOAK_BACKBASE_CONTENT_SERVICE_URL: "http://contentservices:8080"
       KEYCLOAK_BACKBASE_SESSION_LIMIT_DEFAULT_STRATEGY: 'FIFO'
       KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_NAME: 'backbase'
       KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITDIRECTGRANT_NAME: 'session-limit-direct-grant'
@@ -220,6 +221,15 @@ cxs:
       enabled: true
       nameOverride: portal
     env:
+      "portal.experiences.configuration.clientId": "bb-web-client"
+      "portal.experiences.configuration.scope": "openid"
+      "portal.experiences.configuration.response_type": "code id_token token"
+      "portal.experiences.configuration.kind": "hybrid"
+      "portal.experiences.configuration.realm": "backbase"
+      "portal.experiences.configuration.authUrl": "http://identity.docker.internal/auth"
+      "portal.experiences.configuration.landingPageUrl": "http://kubernetes.docker.internal/cxp-manager"
+      "portal.experiences.configuration.loginPageUrl": "http://kubernetes.docker.internal/cxp-manager/login"
+      #"portal.dynamic.url.identifier": "@@"
       PORTAL_RESOURCELOCATION_PROFILE: "filesystem"
       PORTAL_RESOURCELOCATION_PATH: "/tmp"
       # For Portal hibernate dialect is a required property for starting up:
@@ -231,7 +241,7 @@ cxs:
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: "org.hibernate.dialect.MySQL5Dialect"
       SPRING_JPA_PROPERTIES_HIBERNATE_SESSIONFACTORYNAMEISJNDI: "false"
       #  Currently Portal image uses '/portal', will be aligned with other images
-  #            SERVER_SERVLET_CONTEXT_PATH: "/"
+     #            SERVER_SERVLET_CONTEXT_PATH: "/"
   provisioning:
     enabled: true
     app:
@@ -263,24 +273,30 @@ cxs:
 
 backbase-statics:
   image:
-    registry: docker.io
-    repository: torrespro/import-statics
-    tag: latest
+    registry: harbor.backbase.eu
+    repository: harbor.backbase.eu/staging/backbase-statics-importer-identity
+    tag: 6.2.3.1
   job:
     imports:
-      - repository: https://repo.backbase.com
+      - repository: https://artifacts.backbase.com
         ## API KEY to access JFrog Artifactory repository
+        ## Read-only key below only valid for artifacts.backbase.com repository
         ## For other repositories use own keys
-        apikey:
-        ## Username and password in case you don't want to use an API KEY to access JFrog Artifactory
-        ## IMPORTANT! only 1 authentication method is required
-        username: <yourRepoUsername>
-        password: <yourRepoPassword>
+        ##
+        apikey: <apikey>
+        ## List of full paths of zips to import
+        #username: <yourRepoUsername>
+        #password: <yourRepoPassword>
         statics:
-          - /backbase-6-release/com/backbase/tools/cx/cx6-import-tool-cli/6.2.10-b1/cx6-import-tool-cli-6.2.10-b1.jar
-          - /backbase-6-release/com/backbase/cxp/editorial-collection/2.0.0-b340/editorial-collection-2.0.0-b340.zip
-          - /expert-release-local/com/backbase/web-sdk/collection/collection-bb-web-sdk/1.14.0/collection-bb-web-sdk-1.14.0.zip
-          - /backbase-6-release/com/backbase/cxp/experience-manager/2.0.0-b340/experience-manager-2.0.0-b340.zip
+          - /backbase-development-rc-releases/com/backbase/cxp/editorial-collection/2.1.0-b9/editorial-collection-2.1.0-b9.zip
+          - /backbase-development-rc-releases/com/backbase/cxp/experience-manager/2.1.0-b9/experience-manager-2.1.0-b9.zip
+          - /backbase-development-internal-releases/com/backbase/widget/collection/collection-universal/3.3.13/collection-universal-3.3.13.zip
+          - /staging/com/backbase/web-sdk/collection/collection-bb-web-sdk/1.15.2/collection-bb-web-sdk-1.15.2.zip
+          # Repo links
+          #- /backbase-6-release/com/backbase/cxp/editorial-collection/2.1.0-b9/editorial-collection-2.1.0-b9.zip
+          #- /backbase-6-release/com/backbase/cxp/experience-manager/2.1.0-b9/experience-manager-2.1.0-b9.zip
+          #- /expert-release-local/com/backbase/widget/collection/collection-universal/3.3.13/collection-universal-3.3.13.zip
+          #- /expert-release-local/com/backbase/web-sdk/collection/collection-bb-web-sdk/1.15.2/collection-bb-web-sdk-1.15.2.zip
     target:
       context: http://edge:8080/api/provisioning
       auth-url: http://backbaseidentity:8080
