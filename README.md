@@ -31,7 +31,7 @@ choco install kubernetes-helm
 Run `helm repo list` to check if `backbase-charts` and `nginx-stable` are added to your local. If not add them by running following command:
 ```
 helm repo add nginx-stable https://helm.nginx.com/stable
-helm repo add backbase-charts https://repo.backbase.com/backbase-charts --username "$username" --${REPO_USERNAME}word "$${REPO_USERNAME}word"
+helm repo add backbase-charts https://repo.backbase.com/backbase-charts --username "$username" --password "$password"
 helm repo update
 ```
 ## Add Identity host
@@ -57,7 +57,7 @@ helm dependency update local-k8s
 If you do not have the images locally please add `regcred` secret
 
 ```
-kubectl create secret docker-registry regcred --docker-server=https://repo.backbase.com/backbase-docker-releases --docker-username=<your-username> --docker-${REPO_USERNAME}word=<your-password> --docker-email=<your@email.com>
+kubectl create secret docker-registry regcred --docker-server=https://repo.backbase.com/backbase-docker-releases --docker-username=<your-username> --docker-password=<your-password> --docker-email=<your@email.com>
 ```
 ```
 kubectl patch serviceaccount default -p "{\"imagePullSecrets\": [{\"name\": \"regcred\"}]}" -n default
@@ -88,4 +88,4 @@ All configuration is provided in values.yaml
 - 0.1.0: Update Edge 2 and Registry removed
 - 0.2.0: Charts and App version update
 - 0.4.0: Nginx chart added
-- 0.5.0: CX charts and version update
+- 0.5.0: Added identity with CX/IPS charts update
