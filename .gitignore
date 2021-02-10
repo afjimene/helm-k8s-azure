@@ -26,3 +26,9 @@
 
 # Local History for Visual Studio Code
 .history/
+
+# Skip Scripts downloads
+#ignore all kind of files
+/scripts/*.*
+#except sh files
+!/scripts/*.sh

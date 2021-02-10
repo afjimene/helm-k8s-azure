@@ -5,17 +5,20 @@ dependencies:
 - name: ips-edge
   repository: https://repo.backbase.com/backbase-charts
   version: 0.10.1
-- name: cxs
+- name: cxs-portal
   repository: https://repo.backbase.com/backbase-charts
-  version: 0.8.0
-- name: backbase-statics
+  version: 0.7.2
+- name: cxs-contentservices
   repository: https://repo.backbase.com/backbase-charts
-  version: 0.1.8
+  version: 0.7.0
+- name: cxs-provisioning
+  repository: https://repo.backbase.com/backbase-charts
+  version: 0.7.2
 - name: nginx-ingress
   repository: https://helm.nginx.com/stable
   version: 0.7.1
 - name: identity
   repository: https://repo.backbase.com/backbase-charts
   version: 0.12.0
-digest: sha256:0a07837067456fbd6ae50c527efb9503ac97800204551a65f27e30eb36d51fc2
-generated: "2021-02-01T16:59:54.8377915+01:00"
+digest: sha256:cc66a66d5626f4854c4a5cc05fc7a92f52e172c3a3eab980626f1c3de5d46753
+generated: "2021-02-09T18:07:16.1403218+01:00"
