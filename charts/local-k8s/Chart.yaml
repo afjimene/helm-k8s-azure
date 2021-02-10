@@ -17,9 +17,9 @@ dependencies:
   - name: backbase-env
     repository: https://repo.backbase.com/backbase-charts
     version: 0.5.51
-  - name: ips-edge
+  - name: edge
     repository: https://repo.backbase.com/backbase-charts
-    version: 0.10.1
+    version: 0.11.0
   - name: cxs-portal
     repository: https://repo.backbase.com/backbase-charts
     version: 0.7.2

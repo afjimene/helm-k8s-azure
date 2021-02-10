@@ -2,9 +2,9 @@ dependencies:
 - name: backbase-env
   repository: https://repo.backbase.com/backbase-charts
   version: 0.5.51
-- name: ips-edge
+- name: edge
   repository: https://repo.backbase.com/backbase-charts
-  version: 0.10.1
+  version: 0.11.0
 - name: cxs-portal
   repository: https://repo.backbase.com/backbase-charts
   version: 0.7.2
@@ -20,5 +20,5 @@ dependencies:
 - name: identity
   repository: https://repo.backbase.com/backbase-charts
   version: 0.12.0
-digest: sha256:cc66a66d5626f4854c4a5cc05fc7a92f52e172c3a3eab980626f1c3de5d46753
-generated: "2021-02-09T18:07:16.1403218+01:00"
+digest: sha256:84982ded4428c2fd3a0587fc24f915dc71088c052a2b5fd416ae7c51da606183
+generated: "2021-02-10T11:12:05.0427749+01:00"

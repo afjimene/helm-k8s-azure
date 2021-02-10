@@ -54,7 +54,7 @@ backbase-env:
     externalEncSecretKey: "JWTEncKeyDontUseInProduction666!"
     userctxKey: "JWTSecretKeyDontUseInProduction!"
 
-ips-edge:
+edge:
   edge:
     env:
       GATEWAY_ACTUATOR_USER: "admin"
@@ -223,3 +223,20 @@ cxs-portal:
       PORTAL_RESOURCELOCATION_PATH: "/tmp"
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: "org.hibernate.dialect.MySQL5Dialect"
       SPRING_JPA_PROPERTIES_HIBERNATE_SESSIONFACTORYNAMEISJNDI: "false"
+
+nginx-ingress:
+  controller:
+    pod:
+      annotation:
+        "nginx.org/proxy-read-timeout": "600"
+        "nginx.org/proxy-buffer-size": "16k"
+        "nginx.org/ssl-redirect": "false"
+        "nginx.org/proxy-body-size": "100m"
+        "nginx.org/client_max_body_size": "100m"
+    service:
+      annotation:
+        "nginx.org/proxy-read-timeout": "600"
+        "nginx.org/proxy-buffer-size": "16k"
+        "nginx.org/ssl-redirect": "false"
+        "nginx.org/proxy-body-size": "100m"
+        "nginx.org/client_max_body_size": "100m"
