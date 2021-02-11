@@ -32,6 +32,9 @@ dependencies:
   - name: nginx-ingress
     repository: https://helm.nginx.com/stable
     version: 0.7.1
-  - name: identity
+  - name: backbase-identity
     repository: https://repo.backbase.com/backbase-charts
-    version: 0.12.0
+    version: 0.1.0
+  - name: oidc-token-converter
+    repository: https://repo.backbase.com/backbase-charts
+    version: 0.1.0

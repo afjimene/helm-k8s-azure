@@ -1,7 +1,7 @@
 global:
   ipsVersion: IPS-1.13.0
   cxVersion: CXS-6.3.0
-  identityVersion: IDENTITY-1.7.3
+  identityVersion: IDENTITY-1.8.0
   env:
     "EUREKA_CLIENT_ENABLED": "false"
     "SPRING_CLOUD_KUBERNETES_ENABLED": "true"
@@ -75,7 +75,7 @@ edge:
           paths:
             - /
 
-identity:
+backbase-identity:
   backbaseidentity:
     database:
       sid: "backbase_identity"
@@ -95,9 +95,20 @@ identity:
       KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITWEB_NAME: 'session-limit-web'
       KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITWEB_STRATEGY: 'FIFO'
       KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITWEB_LIMIT: '3'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITWEBALTERNATE_NAME: 'session-limit-web-alternate'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITWEBALTERNATE_STRATEGY: 'FIFO'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITWEBALTERNATE_LIMIT: '1'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITEXEMPTIONMOBILE_NAME: 'session-limit-exemption-mobile'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITEXEMPTIONMOBILE_STRATEGY: 'FIFO'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITEXEMPTIONMOBILE_LIMIT: '2'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITEXEMPTIONWEB_NAME: 'session-limit-exemption-web'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITEXEMPTIONWEB_STRATEGY: 'FIFO'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITEXEMPTIONWEB_LIMIT: '1'
       KEYCLOAK_HOSTNAME_DEFAULT_FRONTENDURL: "http://identity.docker.internal/auth"
       JAVA_TOOL_OPTIONS: "-Dkeycloak.migration.action=import -Dkeycloak.profile.feature.upload_scripts=enabled"
       KEYCLOAK_BACKBASE_OIDC_TOKEN_CONVERTER_URL: "http://token-converter:8080"
+      KEYCLOAK_CONNECTIONSJPA_QUARKUS_INITIALIZEEMPTY: "true"
+      KEYCLOAK_CONNECTIONSJPA_QUARKUS_MIGRATIONSTRATEGY: "update"
     volumeMounts:
       - mountPath: /tmp/keycloak-export/
         name: config
@@ -115,22 +126,9 @@ identity:
       image:
         repository: backbase-identity
         tagFrom: identityVersion
-      ports:
-        - name: http
-          port: 8080
-          protocol: TCP
-          targetPort: http
-        - name: infinispan
-          port: 7800
-          protocol: TCP
     service:
       enabled: true
       nameOverride: backbaseidentity
-      additionalPorts:
-        - name: infinispan
-          port: 7800
-          protocol: TCP
-          targetPort: infinispan
     ingress:
       enabled: true
       annotations:
@@ -144,6 +142,7 @@ identity:
         - host: "identity.docker.internal"
           paths:
             - /
+oidc-token-converter:
   oidctokenconverter:
     enabled: true
     env:
@@ -169,20 +168,6 @@ identity:
       image:
         repository: oidc-token-converter-service
         tagFrom: identityVersion
-  identityintegrationservice:
-    enabled: false
-  fidoservice:
-    enabled: false
-  devicemanagementservice:
-    enabled: false
-  confirmation:
-    enabled: false
-  transactionsigningmock:
-    enabled: false
-  hardtokenoutboundintegrationmock:
-    enabled: false
-  communicationsoutboundintegrationmock:
-    enabled: false
 
 cxs-contentservices:
   contentservices:
