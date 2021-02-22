@@ -38,3 +38,6 @@ dependencies:
   - name: oidc-token-converter
     repository: https://repo.backbase.com/backbase-charts
     version: 0.1.0
+  - name: backbase-statics
+    repository: https://repo.backbase.com/backbase-charts
+    version: 0.1.8
