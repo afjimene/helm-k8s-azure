@@ -5,7 +5,7 @@ REPO_USERNAME="<yourRepoUsername>"
 REPO_PASSWORD="<yourRepoPassword>"
 CX_VERSION="6.3.0"
 TAG_WEB_SDK="1.15.2"
-
+TAG_UNIVERSAL_COLLECTION="3.3.13"
 
 AUTH_URL="http://identity.docker.internal"
 PROV_URL="http://kubernetes.docker.internal/api/provisioning"
@@ -28,6 +28,7 @@ echo "Extracted the following tags:"
 echo "TAG_IMPORT_TOOL: ${TAG_IMPORT_TOOL}"
 echo "TAG_CXP_MANAGER: ${TAG_CXP_MANAGER}"
 echo "TAG_EDITORIAL_COLLECTION: ${TAG_EDITORIAL_COLLECTION}"
+echo "TAG_UNIVERSAL_COLLECTION: ${TAG_UNIVERSAL_COLLECTION}"
 echo "TAG_WEB_SDK: ${TAG_WEB_SDK}"
 
 
@@ -35,6 +36,7 @@ echo "Download statics.."
 curl -u "${REPO_USERNAME}":"${REPO_PASSWORD}" -n -L -O "https://repo.backbase.com/backbase-6-release/com/backbase/tools/cx/cx6-import-tool-cli/${TAG_IMPORT_TOOL}/cx6-import-tool-cli-${TAG_IMPORT_TOOL}.jar"
 curl -u "${REPO_USERNAME}":"${REPO_PASSWORD}" -n -L -O "https://repo.backbase.com/backbase-6-release/com/backbase/cxp/experience-manager/${TAG_CXP_MANAGER}/experience-manager-${TAG_CXP_MANAGER}.zip"
 curl -u "${REPO_USERNAME}":"${REPO_PASSWORD}" -n -L -O "https://repo.backbase.com/backbase-6-release/com/backbase/cxp/editorial-collection/${TAG_EDITORIAL_COLLECTION}/editorial-collection-${TAG_EDITORIAL_COLLECTION}.zip"
+curl -u "${REPO_USERNAME}":"${REPO_PASSWORD}" -n -L -O "https://repo.backbase.com/expert-release-local/com/backbase/widget/collection/collection-universal/${TAG_UNIVERSAL_COLLECTION}/collection-universal-${TAG_UNIVERSAL_COLLECTION}.zip"
 curl -u "${REPO_USERNAME}":"${REPO_PASSWORD}" -n -L -O "https://repo.backbase.com/expert-release-local/com/backbase/web-sdk/collection/collection-bb-web-sdk/${TAG_WEB_SDK}/collection-bb-web-sdk-${TAG_WEB_SDK}.zip"
 
 function fn_check_health {
@@ -100,4 +102,5 @@ fn_check_health "http://identity.docker.internal/auth/realms/backbase/.well-know
 echo "Import Statics.."
 fn_provisioning editorial-collection-${TAG_EDITORIAL_COLLECTION}.zip
 fn_provisioning experience-manager-${TAG_CXP_MANAGER}.zip
+fn_provisioning collection-universal-${TAG_UNIVERSAL_COLLECTION}.zip
 fn_provisioning collection-bb-web-sdk-${TAG_WEB_SDK}.zip

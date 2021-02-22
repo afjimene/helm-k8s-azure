@@ -53,6 +53,8 @@ Update dependencies
 helm dependency update local-k8s
 ```
 
+Note - Sometimes it may be required to delete everything in charts folder.
+
 ## How to use
 If you do not have the images locally please add `regcred` secret
 

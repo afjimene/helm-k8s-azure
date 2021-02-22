@@ -14,14 +14,14 @@ dependencies:
 - name: cxs-provisioning
   repository: https://repo.backbase.com/backbase-charts
   version: 0.7.2
-- name: nginx-ingress
-  repository: https://helm.nginx.com/stable
-  version: 0.7.1
+- name: ingress-nginx
+  repository: https://kubernetes.github.io/ingress-nginx
+  version: 3.23.0
 - name: backbase-identity
   repository: https://repo.backbase.com/backbase-charts
   version: 0.1.0
 - name: oidc-token-converter
   repository: https://repo.backbase.com/backbase-charts
   version: 0.1.0
-digest: sha256:56dec77713f26c0fccd1941526e23fffc3d40fb733dc4a737ea144e0f48e3fd5
-generated: "2021-02-11T08:32:06.617781Z"
+digest: sha256:7bcafb8c41f715809d86792c316eda31fea467cfbfea5ae9d601d1de58776063
+generated: "2021-02-22T15:03:41.5049607+01:00"

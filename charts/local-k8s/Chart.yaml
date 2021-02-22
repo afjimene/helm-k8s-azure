@@ -29,9 +29,9 @@ dependencies:
   - name: cxs-provisioning
     repository: https://repo.backbase.com/backbase-charts
     version: 0.7.2
-  - name: nginx-ingress
-    repository: https://helm.nginx.com/stable
-    version: 0.7.1
+  - name: ingress-nginx
+    repository: https://kubernetes.github.io/ingress-nginx
+    version: 3.23.0
   - name: backbase-identity
     repository: https://repo.backbase.com/backbase-charts
     version: 0.1.0
