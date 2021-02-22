@@ -23,5 +23,8 @@ dependencies:
 - name: oidc-token-converter
   repository: https://repo.backbase.com/backbase-charts
   version: 0.1.0
-digest: sha256:7bcafb8c41f715809d86792c316eda31fea467cfbfea5ae9d601d1de58776063
-generated: "2021-02-22T15:03:41.5049607+01:00"
+- name: backbase-statics
+  repository: https://repo.backbase.com/backbase-charts
+  version: 0.1.8
+digest: sha256:c956eac73140d85d2285f66e12cad6e14ff70af96a03774973f131a69f051f22
+generated: "2021-02-22T17:57:48.0577792+01:00"

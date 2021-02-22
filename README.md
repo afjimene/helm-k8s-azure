@@ -64,16 +64,12 @@ kubectl create secret docker-registry regcred --docker-server=https://repo.backb
 ```
 kubectl patch serviceaccount default -p "{\"imagePullSecrets\": [{\"name\": \"regcred\"}]}" -n default
 ```
+Change `<yourRepoUsername>` and `<yourRepoPassword>` with your Repo credentials in `values.yaml`.
 
 ## Install
 ```
 helm install bb-local local-k8s
 ```
-
-## Provisioning scripts
-
-Change `<yourRepoUsername>` and `<yourRepoPassword>` with your Repo credentials in `statics_import.sh`.
-
 ## Verify
 Open a browser and point to:
 ```
