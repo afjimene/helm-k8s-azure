@@ -1,8 +1,8 @@
 apiVersion: v2
 name: local-k8s
 description: A Helm Chart for Backbase Customer Experience Services
-version: 0.4.0
-appVersion: 6.2.10
+version: 0.5.0
+appVersion: 6.3.0
 keywords:
   - backbase
   - cxs
@@ -17,22 +17,27 @@ dependencies:
   - name: backbase-env
     repository: https://repo.backbase.com/backbase-charts
     version: 0.5.51
-  - name: ips-edge
+  - name: edge
     repository: https://repo.backbase.com/backbase-charts
-    version: 0.10.1
-  - name: ips-bas-token-converter
+    version: 0.11.0
+  - name: cxs-portal
     repository: https://repo.backbase.com/backbase-charts
-    version: 0.9.1
-  - name: ips-authentication-dev
+    version: 0.7.2
+  - name: cxs-contentservices
     repository: https://repo.backbase.com/backbase-charts
-    version: 0.9.0
-  - name: cxs
+    version: 0.7.0
+  - name: cxs-provisioning
     repository: https://repo.backbase.com/backbase-charts
-    version: 0.8.0
+    version: 0.7.2
+  - name: ingress-nginx
+    repository: https://kubernetes.github.io/ingress-nginx
+    version: 3.23.0
+  - name: backbase-identity
+    repository: https://repo.backbase.com/backbase-charts
+    version: 0.1.0
+  - name: oidc-token-converter
+    repository: https://repo.backbase.com/backbase-charts
+    version: 0.1.0
   - name: backbase-statics
     repository: https://repo.backbase.com/backbase-charts
     version: 0.1.8
-  - name: nginx-ingress
-    repository: https://helm.nginx.com/stable
-    version: 0.7.1
-

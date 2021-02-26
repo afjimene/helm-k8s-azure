@@ -46,11 +46,12 @@ Cluster_Boundary(cluster, "Kubernetes Cluster") {
     
     Namespace_Boundary(nsFrontEnd, "Namespace") {
         KubernetesIng(ingress, "API Gateway", "")
-
+        KubernetesIng(identityIngress, "Identity Gateway", "")
         KubernetesPod(KubernetesBE1, "Portal", "")
         KubernetesPod(KubernetesBE2, "CS", "")
         KubernetesPod(KubernetesBE3, "Provisioning", "")
-        KubernetesPod(KubernetesBE4, "Auth", "")
+        KubernetesPod(KubernetesBE4, "Identity", "")
+        KubernetesPod(KubernetesBE5, "Token-converter", "")
 '        KubernetesPod(KubernetesUtil1, "Eureka", "")
         KubernetesPod(KubernetesUtil2, "Edge", "")
         KubernetesPod(KubernetesUtil3, "ActiveMQ", "")
@@ -61,24 +62,28 @@ Cluster_Boundary(cluster, "Kubernetes Cluster") {
         KubernetesSecret(KubernetesSecretJWT, "jwt", "")
 
         KubernetesSvc(svcAMQ, "ActiveMQ \nClusterIP \nservice", "")
-'        KubernetesSvc(svcEureka, "Eureka \nClusterIP \nservice", "")
         KubernetesSvc(svcEdge, "Edge \nClusterIP \nservice", "")
+        KubernetesSvc(svcIdentity, "Identity \nClusterIP \nservice", "")
         KubernetesSvc(svcDB, "MySQL \nClusterIP \nservice", "")
     }
 }
 
 
-
+Rel(userAlias, identityIngress, "HTTP", "HTTP/1.1 identity.docker.internal/auth")
 Rel(userAlias, ingress, "HTTP", "get HTTP/1.1 kubernetes.docker.internal/api/cxp-manager")
 'Rel(clientalias, ingress, "HTTP", "")
 
 Rel(ingress, svcEdge, " ")
+Rel(identityIngress, svcIdentity, " ")
 Rel(svcEdge, KubernetesUtil2, " ")
+Rel(svcIdentity, KubernetesBE4, " ")
 Rel(KubernetesUtil2, KubernetesBE1, " ")
 Rel(KubernetesUtil2, KubernetesBE2, " ")
 Rel(KubernetesUtil2, KubernetesBE3, " ")
-Rel(KubernetesUtil2, KubernetesBE4, " ")
+Rel(KubernetesUtil2, KubernetesBE5, " ")
+Rel(KubernetesBE5, KubernetesBE4, " ")
 Rel(staticsJob, svcEdge, " ")
+Rel(staticsJob, svcIdentity, " ")
 
 Rel(KubernetesBE1, svcDB, " ")
 Rel(KubernetesBE2, svcDB, " ")
@@ -102,5 +107,6 @@ Rel(devopsAlias, helmalias, "helm install")
 Rel(helmalias, KubernetesApi, " ")
 
 Rel(ingress, userAlias, "return content to", "4")
+Rel(identityIngress, userAlias, "returns login page", "4")
 
 @enduml

@@ -1,11 +1,13 @@
 global:
+  ipsVersion: IPS-1.13.0
+  cxVersion: CXS-6.3.0
+  identityVersion: IDENTITY-1.8.0
   env:
     "EUREKA_CLIENT_ENABLED": "false"
     "SPRING_CLOUD_KUBERNETES_ENABLED": "true"
     "SPRING_CLOUD_KUBERNETES_RELOAD_ENABLED": "true"
-    "SPRING_CLOUD_KUBERNETES_RIBBON_MODE": "SERVICE"
-    "spring.cloud.loadbalancer.ribbon.enabled": "false"
-    "spring.autoconfigure.exclude": "org.springframework.cloud.netflix.eureka.loadbalancer.LoadBalancerEurekaAutoConfiguration"
+    "SPRING_CLOUD_KUBERNETES_LOADBALANCER_MODE": "SERVICE"
+    "SPRING_AUTOCONFIGURE_EXCLUDE": "org.springframework.cloud.function.context.config.ContextFunctionCatalogAutoConfiguration,org.springframework.cloud.netflix.eureka.loadbalancer.LoadBalancerEurekaAutoConfiguration"
     # Enabling RBAC roles creation as it's disabled by default
   rbac:
     create: true
@@ -51,7 +53,7 @@ backbase-env:
     externalEncSecretKey: "JWTEncKeyDontUseInProduction666!"
     userctxKey: "JWTSecretKeyDontUseInProduction!"
 
-ips-edge:
+edge:
   edge:
     env:
       GATEWAY_ACTUATOR_USER: "admin"
@@ -59,215 +61,184 @@ ips-edge:
     app:
       image:
         repository: edge
-        tag: IPS-1.12.6
+        tagFrom: ipsVersion
     ingress:
       enabled: true
       annotations:
         "kubernetes.io/ingress.class": "nginx"
-        "nginx.ingress.kubernetes.io/proxy-body-size": "50m"
         "nginx.ingress.kubernetes.io/ssl-redirect": "false"
+        "nginx.ingress.kubernetes.io/proxy-body-size": "100m"
+        "nginx.ingress.kubernetes.io/client_max_body_size": "100m"
       hosts:
         - host: "kubernetes.docker.internal"
           paths:
             - /
 
-ips-authentication-dev:
-  authentication-dev:
-    app:
-      image:
-        repository: authentication-dev
-        tag: IPS-1.12.6-no-production
-
-ips-bas-token-converter:
-  bas-token-converter:
-    env:
-      "SPRING_AUTOCONFIGURE_EXCLUDE": "org.springframework.cloud.function.context.config.ContextFunctionCatalogAutoConfiguration"
-    app:
-      image:
-        repository: bb-authentication-token-converter-service
-        tag: IPS-1.12.6
-
-cxs:
-  auditing:
-    enabled: false
-    app:
-      name: auditing
-      image:
-        repository: auditing
+backbase-identity:
+  backbaseidentity:
     database:
-      sid: cx6_audit
-
-  contentservices:
+      sid: "backbase_identity"
+    env:
+      "quarkus.datasource.jdbc.transaction-isolation-level": "2"
+      KEYCLOAK_ADMIN: "admin"
+      KEYCLOAK_ADMIN_PASSWORD: "admin"
+      KEYCLOAK_PASSWORD: "admin"
+      KEYCLOAK_USER: "admin"
+      QUARKUS_HTTP_CORS_ORIGINS: "http://kubernetes.docker.internal"
+      #KEYCLOAK_BACKBASE_CONTENT_SERVICE_URL: "http://contentservices:8080"
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_DEFAULT_STRATEGY: 'FIFO'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_NAME: 'backbase'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITDIRECTGRANT_NAME: 'session-limit-direct-grant'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITDIRECTGRANT_STRATEGY: 'FIFO'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITDIRECTGRANT_LIMIT: '2'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITWEB_NAME: 'session-limit-web'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITWEB_STRATEGY: 'FIFO'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITWEB_LIMIT: '3'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITWEBALTERNATE_NAME: 'session-limit-web-alternate'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITWEBALTERNATE_STRATEGY: 'FIFO'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITWEBALTERNATE_LIMIT: '1'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITEXEMPTIONMOBILE_NAME: 'session-limit-exemption-mobile'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITEXEMPTIONMOBILE_STRATEGY: 'FIFO'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITEXEMPTIONMOBILE_LIMIT: '2'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITEXEMPTIONWEB_NAME: 'session-limit-exemption-web'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITEXEMPTIONWEB_STRATEGY: 'FIFO'
+      KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITEXEMPTIONWEB_LIMIT: '1'
+      KEYCLOAK_HOSTNAME_DEFAULT_FRONTENDURL: "http://identity.docker.internal/auth"
+      JAVA_TOOL_OPTIONS: "-Dkeycloak.migration.action=import -Dkeycloak.profile.feature.upload_scripts=enabled"
+      KEYCLOAK_BACKBASE_OIDC_TOKEN_CONVERTER_URL: "http://token-converter:8080"
+      KEYCLOAK_CONNECTIONSJPA_QUARKUS_INITIALIZEEMPTY: "true"
+      KEYCLOAK_CONNECTIONSJPA_QUARKUS_MIGRATIONSTRATEGY: "update"
+    volumeMounts:
+      - mountPath: /tmp/keycloak-export/
+        name: config
+    volumes:
+      - name: config
+        configMap:
+          name: identity-configmap
+          items:
+            - key: backbase-realm.json
+              path: backbase-realm.json
+            - key: backbase-users-0.json
+              path: backbase-users-0.json
+    app:
+      name: backbaseidentity
+      image:
+        repository: backbase-identity
+        tagFrom: identityVersion
+    service:
+      enabled: true
+      nameOverride: backbaseidentity
+    ingress:
+      enabled: true
+      annotations:
+        "kubernetes.io/ingress.class": "nginx"
+        "nginx.ingress.kubernetes.io/proxy-read-timeout": "600"
+        "nginx.ingress.kubernetes.io/proxy-buffer-size": "10m"
+        "nginx.ingress.kubernetes.io/ssl-redirect": "false"
+        "nginx.ingress.kubernetes.io/proxy-body-size": "100m"
+        "nginx.ingress.kubernetes.io/client_max_body_size": "100m"
+      hosts:
+        - host: "identity.docker.internal"
+          paths:
+            - /
+oidc-token-converter:
+  oidctokenconverter:
     enabled: true
+    env:
+      BACKBASE_TOKENCONVERTER_CLAIMVALUEVALIDATION_ENABLED: "true"
+      BACKBASE_TOKENCONVERTER_VERIFYONLYNOINTERNALTOKEN: "true"
+      BACKBASE_OIDCTOKENCONVERTER_FORCEJWKSVERIFICATIONGIVENMATCHINGCLAIMS: "true"
+      BACKBASE_TOKENCONVERTER_CLAIMVALUEVALIDATION_CLAIMDENYENTRIES_0_CLAIMNAME: "acr"
+      BACKBASE_TOKENCONVERTER_CLAIMVALUEVALIDATION_CLAIMDENYENTRIES_0_CLAIMVALUES: "bb:deny"
+      BACKBASE_OIDCTOKENCONVERTER_WHITELISTEDDOMAINS_0_ISSUERHOST: "backbaseidentity"
+      BACKBASE_OIDCTOKENCONVERTER_WHITELISTEDDOMAINS_0_INTERNALHOST: "backbaseidentity:8080"
+      BACKBASE_OIDCTOKENCONVERTER_WHITELISTEDDOMAINS_1_ISSUERHOST: "identity.docker.internal"
+      BACKBASE_OIDCTOKENCONVERTER_WHITELISTEDDOMAINS_1_INTERNALHOST: "backbaseidentity:8080"
+      BACKBASE_OIDCTOKENCONVERTER_USERINFOVERIFICATION: "true"
+      BACKBASE_TOKENCONVERTER_CLAIMSMAPPING_0_EXTERNAL: "userinfo_external_claim"
+      BACKBASE_TOKENCONVERTER_CLAIMSMAPPING_0_INTERNAL: "userinfo_internal_claim"
+      BACKBASE_TOKENCONVERTER_CLAIMSMAPPING_0_REQUIRED: "false"
+      BACKBASE_TOKENCONVERTER_CLAIMSMAPPING_1_EXTERNAL: "tid"
+      BACKBASE_TOKENCONVERTER_CLAIMSMAPPING_1_INTERNAL: "tid"
+      BACKBASE_TOKENCONVERTER_CLAIMSMAPPING_1_REQUIRED: "false"
+      SPRING_AUTOCONFIGURE_EXCLUDE: "org.springframework.cloud.function.context.config.ContextFunctionCatalogAutoConfiguration"
+    app:
+      name: oidctokenconverter
+      image:
+        repository: oidc-token-converter-service
+        tagFrom: identityVersion
+
+cxs-contentservices:
+  contentservices:
     app:
       name: contentservices
       image:
-        repository: contentservices
-        tag: CXS-6.2.10
-      resources:
-        memory:
-          ram: 1024
-        cpu:
-          minShares: 100
-          maxShares: 2000
-    database:
-      sid: cx6_contentservices
-
-  portal:
-    enabled: true
-    app:
-      name: portal
-      image:
-        repository: portal
-        tag: CXS-6.2.10
-      resources:
-        memory:
-          ram: 1024
-        cpu:
-          minShares: 100
-          maxShares: 2000
-    database:
-      sid: cx6_portal
-    service:
-      enabled: true
-      nameOverride: portal
+        tagFrom: cxVersion
     env:
-      PORTAL_RESOURCELOCATION_PROFILE: "filesystem"
-      PORTAL_RESOURCELOCATION_PATH: "/tmp"
-      # For Portal hibernate dialect is a required property for starting up:
-      #
-      # - mysql = org.hibernate.dialect.MySQL5Dialect
-      # - sqlserver = org.hibernate.dialect.SQLServer2012Dialect
-      # - oracle = org.hibernate.dialect.Oracle12cDialect
-      #
-      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: "org.hibernate.dialect.MySQL5Dialect"
-      SPRING_JPA_PROPERTIES_HIBERNATE_SESSIONFACTORYNAMEISJNDI: "false"
-      #  Currently Portal image uses '/portal', will be aligned with other images
-  #            SERVER_SERVLET_CONTEXT_PATH: "/"
+      "SPRING_LIQUIBASE_ENABLED": "true"
+
+cxs-provisioning:
   provisioning:
-    enabled: true
     app:
       name: provisioning
       image:
-        repository: provisioning
-        tag: CXS-6.2.10
-      resources:
-        memory:
-          ram: 1024
-        cpu:
-          minShares: 100
-          maxShares: 2000
-    database:
-      sid: cx6_provisioning
+        tagFrom: cxVersion
+    env:
+      "SPRING_LIQUIBASE_ENABLED": "true"
 
-  pushintegrationservice:
-    enabled: false
+cxs-portal:
+  portal:
     app:
-      name: pushintegrationservice
+      name: portal
       image:
-        repository: push-integration-service
-        tag: CXS-6.2.10
-    database:
-      sid: cx6_push_integration
+        tagFrom: cxVersion
     env:
-      "eureka.instance.non-secure-port": "8080"
-  renditionservice:
-    enabled: false
-    app:
-      name: renditionservice
-      image:
-        repository: renditionservice
-        tag: CXS-6.2.10
-    database:
-      sid: cx6_renditionservice
-    env:
-      "renditionservice.extension-points.enabled": "true"
-  targeting:
-    enabled: false
-    app:
-      name: targeting
-      image:
-        repository: targeting
-        tag: CXS-6.2.10
-      resources:
-        memory:
-          ram: 1024
-        cpu:
-          minShares: 100
-          maxShares: 2000
-    database:
-      sid: cx6_targeting
-  thumbnailservice:
-    enabled: false
-    app:
-      name: thumbnailservice
-      image:
-        repository: thumbnailservice
-        tag: CXS-6.2.10
-  space-controller:
-    enabled: false
-    app:
-      name: space-controller
-      image:
-        repository: space-controller
-        tag: CXS-6.2.10
-      resources:
-        memory:
-          ram: 1024
-        cpu:
-          minShares: 100
-          maxShares: 2000
-    database:
-      sid: cx6_space_controller
-    env:
-      "SPRING_APPLICATION_NAME": "space-controller"
-  versionmanagementpersistenceservice:
-    enabled: false
-    app:
-      name: versionmanagementpersistenceservice
-      image:
-        repository: versionmanagement-persistence-service
-        tag: CXS-6.2.10
-      resources:
-        cpu:
-          minShares: 100
-          maxShares: 1000
-    database:
-      sid: cx6_versionmanagement
+      "SPRING_LIQUIBASE_ENABLED": "true"
+      "portal.experiences.configuration.clientId": "bb-web-client"
+      "portal.experiences.configuration.scope": "openid"
+      "portal.experiences.configuration.response_type": "code id_token token"
+      "portal.experiences.configuration.kind": "hybrid"
+      "portal.experiences.configuration.realm": "backbase"
+      "portal.experiences.configuration.authUrl": "http://identity.docker.internal/auth"
+      "portal.experiences.configuration.landingPageUrl": "http://kubernetes.docker.internal/cxp-manager"
+      "portal.experiences.configuration.loginPageUrl": "http://kubernetes.docker.internal/cxp-manager/login"
+      #"portal.dynamic.url.identifier": "@@"
+      PORTAL_RESOURCELOCATION_PROFILE: "filesystem"
+      PORTAL_RESOURCELOCATION_PATH: "/tmp"
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: "org.hibernate.dialect.MySQL5Dialect"
+      SPRING_JPA_PROPERTIES_HIBERNATE_SESSIONFACTORYNAMEISJNDI: "false"
 
 backbase-statics:
   image:
     registry: docker.io
-    repository: torrespro/import-statics
+    repository: torrespro/statics-identity
     tag: latest
   job:
-    imports:
-      - repository: https://repo.backbase.com
-        ## API KEY to access JFrog Artifactory repository
-        ## For other repositories use own keys
-        apikey:
-        ## Username and password in case you don't want to use an API KEY to access JFrog Artifactory
-        ## IMPORTANT! only 1 authentication method is required
-        username: <yourRepoUsername>
-        password: <yourRepoPassword>
-        statics:
-          - /backbase-6-release/com/backbase/tools/cx/cx6-import-tool-cli/6.2.10-b1/cx6-import-tool-cli-6.2.10-b1.jar
-          - /backbase-6-release/com/backbase/cxp/editorial-collection/2.0.0-b340/editorial-collection-2.0.0-b340.zip
-          - /expert-release-local/com/backbase/web-sdk/collection/collection-bb-web-sdk/1.14.0/collection-bb-web-sdk-1.14.0.zip
-          - /backbase-6-release/com/backbase/cxp/experience-manager/2.0.0-b340/experience-manager-2.0.0-b340.zip
-    target:
-      context: http://edge:8080/api/provisioning
-      auth-url: http://edge:8080/api/auth/login
-      identity-real:
-      username: admin
-      password: admin
-      retry-max-attempts: 200
-      retry-back-off-period: 2000
-
     check:
       enabled: true
       targets:
         - name: Authentication
-          url: http://edge:8080/api/auth/actuator/health
+          url: http://backbaseidentity:8080/auth/realms/backbase/.well-known/openid-configuration
         - name: 8080/api/provisioning
           url: http://edge:8080/api/provisioning/actuator/health
+    imports:
+      - repository: https://repo.backbase.com
+        apikey:
+        username: <yourRepoUsername>
+        password: <yourRepoPassword>
+        statics:
+          - /backbase-6-release/com/backbase/tools/cx/cx6-import-tool-cli/6.2.9-b1/cx6-import-tool-cli-6.3.0-b4.jar
+          - /backbase-6-release/com/backbase/cxp/editorial-collection/b3683/editorial-collection-2.1.0-b9.zip
+          - /expert-release-local/com/backbase/web-sdk/collection/collection-bb-web-sdk/1.13.1/collection-bb-web-sdk-1.15.2.zip
+          - /backbase-6-release/com/backbase/cxp/experience-manager/b3683/experience-manager-2.1.0-b9.zip
+    target:
+      identity-scope: openid
+      identity-grant-type: password
+      identity-client-id: bb-tooling-client
+      identity-realm: backbase
+      auth-url: http://backbaseidentity:8080
+      context: http://edge:8080/api/provisioning
+      password: admin
+      retry-back-off-period: 2000
+      retry-max-attempts: 20
+      username: admin
