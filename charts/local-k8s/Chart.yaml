@@ -1,7 +1,7 @@
 apiVersion: v2
 name: local-k8s
 description: A Helm Chart for Backbase Customer Experience Services
-version: 0.5.1
+version: 0.5.0
 appVersion: 6.3.0
 keywords:
   - backbase
