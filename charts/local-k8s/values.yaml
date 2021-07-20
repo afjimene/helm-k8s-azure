@@ -1,14 +1,5 @@
 global:
   bbVersion: "2021.07"
-  env:
-    "EUREKA_CLIENT_ENABLED": "false"
-    "SPRING_CLOUD_KUBERNETES_ENABLED": "true"
-    "SPRING_CLOUD_KUBERNETES_RELOAD_ENABLED": "true"
-    "SPRING_CLOUD_KUBERNETES_LOADBALANCER_MODE": "SERVICE"
-    "SPRING_AUTOCONFIGURE_EXCLUDE": "org.springframework.cloud.function.context.config.ContextFunctionCatalogAutoConfiguration,org.springframework.cloud.netflix.eureka.loadbalancer.LoadBalancerEurekaAutoConfiguration"
-    # Enabling RBAC roles creation as it's disabled by default
-  rbac:
-    create: true
   app:
     image:
       registry: repo.backbase.com/backbase-docker-releases
