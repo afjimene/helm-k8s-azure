@@ -22,8 +22,6 @@ global:
     EXTERNAL_SIG_SECRET_KEY_fromSecret: true
     EXTERNAL_ENC_SECRET_KEY_fromSecret: true
     USERCTX_KEY_fromSecret: true
-  registry:
-    enabled: false
 
 backbase-env:
   fullnameOverride: local-k8s
