@@ -56,7 +56,7 @@ edge:
         "nginx.ingress.kubernetes.io/proxy-body-size": "100m"
         "nginx.ingress.kubernetes.io/client_max_body_size": "100m"
       hosts:
-        - host: "kubernetes.docker.internal"
+        - host: "40.121.199.35"
           paths:
             - /
 
@@ -70,7 +70,7 @@ backbase-identity:
       KEYCLOAK_ADMIN_PASSWORD: "admin"
       KEYCLOAK_PASSWORD: "admin"
       KEYCLOAK_USER: "admin"
-      QUARKUS_HTTP_CORS_ORIGINS: "http://kubernetes.docker.internal"
+      QUARKUS_HTTP_CORS_ORIGINS: "http://40.121.199.35"
       #KEYCLOAK_BACKBASE_CONTENT_SERVICE_URL: "http://contentservices:8080"
       KEYCLOAK_BACKBASE_SESSION_LIMIT_DEFAULT_STRATEGY: 'FIFO'
       KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_NAME: 'backbase'
@@ -89,7 +89,7 @@ backbase-identity:
       KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITEXEMPTIONWEB_NAME: 'session-limit-exemption-web'
       KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITEXEMPTIONWEB_STRATEGY: 'FIFO'
       KEYCLOAK_BACKBASE_SESSION_LIMIT_REALMS_BACKBASE_CLIENTS_SESSIONLIMITEXEMPTIONWEB_LIMIT: '1'
-      KEYCLOAK_HOSTNAME_DEFAULT_FRONTENDURL: "http://identity.docker.internal/auth"
+      KEYCLOAK_HOSTNAME_DEFAULT_FRONTENDURL: "http://40.121.199.35/auth"
       JAVA_TOOL_OPTIONS: "-Dkeycloak.migration.action=import -Dkeycloak.profile.feature.upload_scripts=enabled"
       KEYCLOAK_BACKBASE_OIDC_TOKEN_CONVERTER_URL: "http://token-converter:8080"
       KEYCLOAK_CONNECTIONSJPA_QUARKUS_INITIALIZEEMPTY: "true"
@@ -119,7 +119,7 @@ backbase-identity:
         "nginx.ingress.kubernetes.io/proxy-body-size": "100m"
         "nginx.ingress.kubernetes.io/client_max_body_size": "100m"
       hosts:
-        - host: "identity.docker.internal"
+        - host: "40.121.199.35"
           paths:
             - /
 oidc-token-converter:
@@ -178,9 +178,9 @@ cxs-portal:
       "portal.experiences.configuration.response_type": "code id_token token"
       "portal.experiences.configuration.kind": "hybrid"
       "portal.experiences.configuration.realm": "backbase"
-      "portal.experiences.configuration.authUrl": "http://identity.docker.internal/auth"
-      "portal.experiences.configuration.landingPageUrl": "http://kubernetes.docker.internal/cxp-manager"
-      "portal.experiences.configuration.loginPageUrl": "http://kubernetes.docker.internal/cxp-manager/login"
+      "portal.experiences.configuration.authUrl": "http://40.121.199.35/auth"
+      "portal.experiences.configuration.landingPageUrl": "http://40.121.199.35/cxp-manager"
+      "portal.experiences.configuration.loginPageUrl": "http://40.121.199.35/cxp-manager/login"
       #"portal.dynamic.url.identifier": "@@"
       PORTAL_RESOURCELOCATION_PROFILE: "filesystem"
       PORTAL_RESOURCELOCATION_PATH: "/tmp"
